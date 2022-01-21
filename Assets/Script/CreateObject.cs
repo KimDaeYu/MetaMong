@@ -20,7 +20,7 @@ public class CreateObject : MonoBehaviour
 
     private bool ARtouch = false;
     private void ARTouched(){
-        if(Input.GetMouseButton(0) && !ARtouch){
+        if(Input.GetMouseButton(0) && !ARtouch && !seleceted){
             ARtouch = true;
             Touch touch = Input.GetTouch(0);
 
@@ -31,19 +31,19 @@ public class CreateObject : MonoBehaviour
                 //GameObject spawnObject;
                 if(target != null){
                     var spawnObject = Instantiate(target, hitPose.position, hitPose.rotation);
+                    spawnObject.transform.Rotate(0,180,0);
+
+                    if(target.name.Substring(0,4) == "Rubb"){
+                        spawnObject.transform.Rotate(-90,0,0);
+                    }
+                    
+                    //GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " " + target.name.Substring(0,4) + "!!\n";
+                    GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " " + spawnObject.transform.rotation.ToString() + "\n";
                 }
 
                 GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " " + hits[0].pose.position.ToString() + " AR Hit!!\n";
-                GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " " + spawnObject.name + " AR Hit!!\n";
+                target = null;
                 
-                GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " " + target.name.Substring(0,4) + "!!\n";
-                if(target.name.Substring(0,4) == "duck")
-                    spawnObject.transform.rotation = Quaternion.Euler(-90, 180, 0);
-                else
-                    spawnObject.transform.rotation = Quaternion.Euler(0, 180, 0);
-                //hits[0]
-                // a.AddComponent<Script>() ;
-
             }
         }
         if(Input.GetMouseButtonUp(0)){
@@ -53,6 +53,7 @@ public class CreateObject : MonoBehaviour
 
 
     private bool touched = false;
+    private bool seleceted = false;
     private void Touched(){
         if(Input.GetMouseButton(0) && !touched){
             touched = true;
@@ -69,9 +70,11 @@ public class CreateObject : MonoBehaviour
                     // spawnObject.AddComponent<RotateObject>();
                     // spawnObject.transform.localPosition = new Vector3(0,0,0);
                     // spawnObject.transform.parent.rotation = Quaternion.Euler(-90, 0, 0);
-
                     GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " " + hit.collider.gameObject.name + " Seleceted!!\n";
                     // GameObject Name = Info.transform.GetChild(1).gameObject;
+                    seleceted = true;
+                }else{
+                    seleceted = false;
                 }
             }
         }
