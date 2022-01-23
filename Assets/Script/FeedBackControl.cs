@@ -10,12 +10,19 @@ public class FeedBackControl : MonoBehaviour
     public GameObject CommentPanel;
 
     [SerializeField] GameObject UIManager;
+
+    //public Dictionary <string,CmtItem> itemMap;
+    public Dictionary <string,List <CmtItem>> itemMap;
+    
+
+    void Start(){
+        itemMap = new Dictionary<string,List <CmtItem>>();
+    }
     // Update is called once per frame
     void Update()
     {
         Touched();
     }
-
 
     private bool touched = false;
     Transform target;
@@ -40,6 +47,23 @@ public class FeedBackControl : MonoBehaviour
                     UIManager.GetComponent<Comment>().TargetStory = Story;
                     UIManager.GetComponent<Comment>().ClearCmtList();
                     //댓글 만드는 오브젝트 함수
+                    if(itemMap.ContainsKey(Story.name)){
+                        foreach (CmtItem t in itemMap[Story.name])
+                        {
+                            UIManager.GetComponent<Comment>().printCmt(t.content,t.date,t.id);
+                        }
+                    }
+
+                    foreach (KeyValuePair<string,List <CmtItem>> pair in itemMap)
+                    {
+                        List<CmtItem> item = pair.Value;
+                        Debug.Log(pair.Key);
+                        Debug.Log("===========");
+                        foreach (CmtItem t in item)
+                        {
+                            t.Show();
+                        }
+                    }
                 }
 
                 if(hit.collider.gameObject.CompareTag("Like")){

@@ -27,6 +27,7 @@ public class NewStory : MonoBehaviour
         info.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = "ID " + Random.Range(1000,2000).ToString();
         
         var NewObject = Instantiate(StoryText, Pos, Quaternion.identity);
+        NewObject.name = "Story" + Random.Range(1000,2000).ToString();
         NewObject.transform.SetParent(StoryView.transform);
     }
 
