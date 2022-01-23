@@ -37,7 +37,7 @@ AR 과 GPS를 이용한 SNS 어플리케이션을 제안합니다.
 
 ## UI
 
-<img src="./git_files/images/design1.jpg" width="700"/> 
+<img src="./git_files/images/ui.jpg" width="700"/> 
 
 - 글쓰기 버튼 : 이미지, 글 포스트를 공유할 수 있는 기능.
 - 공간 인식 버튼 : 3d 캐릭터를 업로드 하기위해, 공간의 평면을 인식 하는 AR 기능.
