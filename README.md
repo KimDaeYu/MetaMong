@@ -22,6 +22,8 @@ https://user-images.githubusercontent.com/30468434/150667562-80336abb-1431-4dd5-
 
 2022 슈퍼챌린지 SW해커톤
 
+2022-1 컴퓨터공학 종합설계
+
 - 개발의도 및 아이디어
 
 ```
