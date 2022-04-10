@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/firebase_database_url,@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id">
+  <string name="firebase_database_url" translatable="false">https://metamong-c173d-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+  <string name="gcm_defaultSenderId" translatable="false">626203804582</string>
+  <string name="google_storage_bucket" translatable="false">metamong-c173d.appspot.com</string>
+  <string name="project_id" translatable="false">metamong-c173d</string>
+  <string name="google_api_key" translatable="false">AIzaSyDbKaqSHZpl5Crzl50KXuzs5uVLEQTe5q4</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDbKaqSHZpl5Crzl50KXuzs5uVLEQTe5q4</string>
+  <string name="google_app_id" translatable="false">1:626203804582:android:d563b59869f11bc81e4567</string>
+  <string name="default_web_client_id" translatable="false">626203804582-epr09knlc0agct1rskpffs4p1jpq48bt.apps.googleusercontent.com</string>
+</resources>

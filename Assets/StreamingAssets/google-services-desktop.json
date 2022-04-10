@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "626203804582",
+    "firebase_url": "https://metamong-c173d-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "metamong-c173d",
+    "storage_bucket": "metamong-c173d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626203804582:android:d563b59869f11bc81e4567",
+        "android_client_info": {
+          "package_name": "com.MetaMong.MetaBoard_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "626203804582-epr09knlc0agct1rskpffs4p1jpq48bt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbKaqSHZpl5Crzl50KXuzs5uVLEQTe5q4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "626203804582-epr09knlc0agct1rskpffs4p1jpq48bt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
