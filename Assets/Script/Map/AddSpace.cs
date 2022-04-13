@@ -42,7 +42,7 @@ public class AddSpace : MonoBehaviour
 				instance.transform.localPosition = _map.GeoToWorldPosition(_locations[i], true);
 
                 Debug.Log("m당 유니티 스케일 : "+GetOneMapMeterInUnityMeters(_map,instance.transform.localPosition));
-
+				_spawnScale=GetOneMapMeterInUnityMeters(_map,instance.transform.localPosition);
 
                 instance.transform.position = new Vector3(instance.transform.position.x,
                 instance.transform.position.y+2.5f,
@@ -83,7 +83,7 @@ public class AddSpace : MonoBehaviour
                 spawnedObject.transform.position.z); // 지도 위에 띄우기 위해 y값 조절
 
 				spawnedObject.transform.localScale = new Vector3(_spawnScale, _spawnScale, _spawnScale);
-                Debug.Log(GetOneMapMeterInUnityMeters(_map,spawnedObject.transform.localPosition));
+                Debug.Log("m당 유니티 스케일 : "+GetOneMapMeterInUnityMeters(_map,spawnedObject.transform.localPosition));
 			}
 		}
 }
