@@ -29,6 +29,8 @@ public class AddSpace : MonoBehaviour
 
 		List<GameObject> _spawnedObjects;
 
+
+		private float onemeter_scale = 2f;
 		void Start()
 		{
 			_locations = new Vector2d[_locationStrings.Length];
@@ -42,7 +44,7 @@ public class AddSpace : MonoBehaviour
 				instance.transform.localPosition = _map.GeoToWorldPosition(_locations[i], true);
 
                 Debug.Log("m당 유니티 스케일 : "+GetOneMapMeterInUnityMeters(_map,instance.transform.localPosition));
-				_spawnScale=GetOneMapMeterInUnityMeters(_map,instance.transform.localPosition);
+				//_spawnScale=GetOneMapMeterInUnityMeters(_map,instance.transform.localPosition);
 
                 instance.transform.position = new Vector3(instance.transform.position.x,
                 instance.transform.position.y+2.5f,
@@ -78,11 +80,17 @@ public class AddSpace : MonoBehaviour
 				var location = _locations[i];
 				spawnedObject.transform.localPosition = _map.GeoToWorldPosition(location, true);
 
+				onemeter_scale=GetOneMapMeterInUnityMeters(_map,spawnedObject.transform.localPosition);
+				if(onemeter_scale is not float.NaN){
+					_spawnScale=onemeter_scale*100;
+				}
+
                 spawnedObject.transform.position = new Vector3(spawnedObject.transform.position.x,
                 spawnedObject.transform.position.y+3.0f,
                 spawnedObject.transform.position.z); // 지도 위에 띄우기 위해 y값 조절
 
 				spawnedObject.transform.localScale = new Vector3(_spawnScale, _spawnScale, _spawnScale);
+				
                 Debug.Log("m당 유니티 스케일 : "+GetOneMapMeterInUnityMeters(_map,spawnedObject.transform.localPosition));
 			}
 		}
