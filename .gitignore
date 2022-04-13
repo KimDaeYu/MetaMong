@@ -72,7 +72,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 test.zip
-Assets/ARLocation/
-Metamong_BackUpThisFolder_ButDontShipItWithYourGame/
-Metamong.zip
-Metamong.apk
+
+*.zip
+*.apk
