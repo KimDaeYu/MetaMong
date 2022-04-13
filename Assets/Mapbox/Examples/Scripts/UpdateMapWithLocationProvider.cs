@@ -1,5 +1,7 @@
 ﻿namespace Mapbox.Unity.Map
 {
+	//이 파일이 위치에 따라 map update
+
 	using System.Collections;
 	using Mapbox.Unity.Location;
 	using UnityEngine;

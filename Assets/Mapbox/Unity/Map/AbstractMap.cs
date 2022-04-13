@@ -1025,6 +1025,7 @@ namespace Mapbox.Unity.Map
 			// For quadtree implementation of the map, the map scale needs to be compensated for.
 			var scaleFactor = Mathf.Pow(2, (InitialZoom - AbsoluteZoom));
 			var worldPos = Conversions.GeoToWorldPosition(latitudeLongitude, CenterMercator, WorldRelativeScale * scaleFactor).ToVector3xz();
+			
 			return Root.TransformPoint(worldPos);
 		}
 
@@ -1055,8 +1056,9 @@ namespace Mapbox.Unity.Map
 		/// <param name="queryHeight">If set to <c>true</c> will return the terrain height(in Unity units) at that point.</param>
 		public virtual Vector3 GeoToWorldPosition(Vector2d latitudeLongitude, bool queryHeight = true)
 		{
+			Debug.Log("parameter :"+latitudeLongitude);
 			Vector3 worldPos = GeoToWorldPositionXZ(latitudeLongitude);
-
+			Debug.Log("map에서 :"+worldPos);
 			if (queryHeight)
 			{
 				//Query Height.

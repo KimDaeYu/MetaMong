@@ -61,7 +61,6 @@ namespace Mapbox.Unity.Utilities
 			{
 				throw new Exception(string.Format("Could not convert longitude to double: {0}", latLonSplit[0]));
 			}
-
 			return new Vector2d(latitude, longitude);
 		}
 
@@ -97,6 +96,7 @@ namespace Mapbox.Unity.Utilities
 		/// </example>
 		public static Vector2d GeoToWorldPosition(double lat, double lon, Vector2d refPoint, float scale = 1)
 		{
+			//여기가 문제. 여기서 vector가 0값으로 나간다.
 			var posx = lon * OriginShift / 180;
 			var posy = Math.Log(Math.Tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
 			posy = posy * OriginShift / 180;
