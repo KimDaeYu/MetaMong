@@ -27,6 +27,9 @@ public class ARPointCheck : MonoBehaviour
 
     private bool ARtouch = false;
     private bool seleceted = false;
+
+    public float measured_dis;
+    public Vector3 LastHitPose; 
     private void ARTouched(){
         if(Input.GetMouseButton(0) && !ARtouch && !seleceted){
             ARtouch = true;
@@ -40,20 +43,21 @@ public class ARPointCheck : MonoBehaviour
                 line.transform.Find("Line").gameObject.GetComponent<LineRenderer>().SetPosition(0, hitPose.position);
                 line.transform.Find("Line").gameObject.GetComponent<LineRenderer>().SetPosition(1, Camera.main.transform.position);
                 line.transform.Find("Start").position = hitPose.position;
+                LastHitPose = hitPose.position;
                 line.transform.Find("End").position = Camera.main.transform.position;
                 line.transform.Find("Length").position = (Camera.main.transform.position + hitPose.position) / 2;
 
-                float dis = Vector3.Distance(hitPose.position, Camera.main.transform.position);
-                GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += dis.ToString() + " measured!!\n";
-                line.transform.Find("Length").gameObject.GetComponent<TextMeshPro>().SetText(dis.ToString() + "m");
+                measured_dis = Vector3.Distance(hitPose.position, Camera.main.transform.position);
+                GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += measured_dis.ToString() + " measured!!\n";
+                line.transform.Find("Length").gameObject.GetComponent<TextMeshPro>().SetText(measured_dis.ToString() + "m");
                 
                 //GameObject spawnObject;
-                
                 GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " " + hits[0].pose.position.ToString() + " AR Hit!!\n";
             }
         }
         if(Input.GetMouseButtonUp(0)){
             ARtouch = false;
+            gameObject.GetComponent<OrientationArrow>().SetOrigin();
         }
     }
 
