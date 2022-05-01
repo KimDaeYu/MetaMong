@@ -11,8 +11,17 @@ using System.Text;
 using UnityEngine.UI;
 
 
+
+
 public class MetamongLogLocationProvider : MonoBehaviour
 {
+	/*
+		휴대폰에서 사용자 위치 불러오는 class
+
+		굳이 클래스에서 사용을 해야할지. mapbox의 location에서 바로 구할 수 있는데.
+
+	*/
+
 		[SerializeField]
 		private Text _logText;
 
@@ -24,6 +33,9 @@ public class MetamongLogLocationProvider : MonoBehaviour
 		private bool _logToFile = false;
 		private LocationLogWriter _logWriter = null;
 
+		
+		private double user_x;
+		private double user_y;
 
 		void Start()
 		{
@@ -44,6 +56,16 @@ public class MetamongLogLocationProvider : MonoBehaviour
 			}
 		}
 
+		//location.LatitudeLongitude.x, location.LatitudeLongitude.y  (경도 위도 불러오기)
+		public double Get_userX()
+		{
+			//이걸 함수 하나로 묶을수는 없나?
+			return user_x;
+		}
+		public double Get_userY(){
+			return user_y;
+		}
+
 
 		void OnDestroy()
 		{
@@ -56,6 +78,12 @@ public class MetamongLogLocationProvider : MonoBehaviour
 		{
 
 			/////////////// GUI logging //////////////////////
+			
+			//변수를 업데이트
+			user_x=location.LatitudeLongitude.x;
+			user_y=location.LatitudeLongitude.y;
+			//
+			
 			StringBuilder sb = new StringBuilder();
 
 			sb.AppendLine(string.Format("IsLocationServiceEnabled: {0}", location.IsLocationServiceEnabled));
