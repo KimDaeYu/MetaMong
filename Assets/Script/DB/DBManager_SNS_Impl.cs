@@ -364,7 +364,7 @@ public partial class DBManager : MonoBehaviour
     /// 포스트의 전체 좋아요 수 가져오기
     /// </summary>
     /// <param name="postId">포스트 ID</param>
-    /// <returns>성공시 포스트의 전체 댓글 배열, 실패시 null</returns>
+    /// <returns>성공시 포스트의 전체 좋아요 수, 실패시 -1</returns>
     public partial async UniTask<int> GetLikes(string postId)
     {
         var result = await GetValue(currentSpaceRef.Child(postId).Child("likes"));

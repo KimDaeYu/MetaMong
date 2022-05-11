@@ -17,7 +17,7 @@ public partial class DBManager : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogException(e);
+            Debug.Log(e);
             return null;
         }
         return newRef.Key;
@@ -31,7 +31,7 @@ public partial class DBManager : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogException(e);
+            Debug.Log(e);
             return false;
         }
         return true;
@@ -45,7 +45,7 @@ public partial class DBManager : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogException(e);
+            Debug.Log(e);
             return null;
         }
     }
@@ -61,7 +61,7 @@ public partial class DBManager : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogException(e);
+            Debug.Log(e);
             return false;
         }
         return true;
@@ -76,7 +76,7 @@ public partial class DBManager : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogException(e);
+            Debug.Log(e);
             return null;
         }
         
@@ -102,7 +102,7 @@ public partial class DBManager : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogException(e);
+            Debug.Log(e);
         }
 
         // Debug.Log(result.Data);

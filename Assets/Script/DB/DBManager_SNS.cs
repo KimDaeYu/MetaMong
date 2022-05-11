@@ -98,6 +98,6 @@ public partial class DBManager : MonoBehaviour
 
     // 포스트의 전체 좋아요 수 가져오기
     // postId: 포스트 ID
-    // return: 성공시 포스트의 전체 댓글 배열, 실패시 null
+    // return: 성공시 포스트의 전체 좋아요 수, 실패시 -1
     public partial UniTask<int> GetLikes(string postId);
 }
