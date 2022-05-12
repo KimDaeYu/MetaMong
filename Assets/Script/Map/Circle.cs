@@ -19,20 +19,44 @@ public class Circle : MonoBehaviour {
     public float yradius;//현재 안쓰이는 것.
 
     public Vector2d Pos;
+
+    public string Space_title="";// space 생성시 addspace에서 자동으로 입력해줌.
+
     LineRenderer line;
+    GameObject marker;
+    GameObject marker_title; // title 담기는 ui
+
+    float _spawnScale = 15f;
 
     private Vector2d unit_pos=new Vector2d(60.19191360d, 24.96843000d);// 유니티 좌표로 변환하기위한 데이터 상수.
- 
+    
     void Start () {
         line = gameObject.GetComponent<LineRenderer> ();
+        marker = transform.Find("Marker").gameObject;
+        marker_title = transform.Find("Content").gameObject;
+
+
         line.SetVertexCount(segments + 1);
         line.useWorldSpace = false;
-        CreatePoints();    
+        CreatePoints();
+        CreateMarker();
+        UpdateMarker();
     }
     
     void Update(){
         CreatePoints();
+        CreateMarker();
+        UpdateMarker();
+
         gameObject.transform.position = GetGPSToWorld(_map, Pos) + new Vector3(0,5,0); // 5만큼 높이 올려서 생성.
+    }
+
+    void UpdateMarker(){
+        //마커 정보를 수정하거나 등, 내용 업데이트 된 것을 반영.
+        if(marker_title==null)Debug.Log("오류");
+
+        marker_title.GetComponent<TextMesh>().text = Space_title;
+        
     }
 
     void CreatePoints () {
@@ -40,20 +64,48 @@ public class Circle : MonoBehaviour {
             원 그려주는 함수.
             xradius를 통해 반지름 조절.
         */
-        float x;
-        float y;
+        float x=0f;
+        float y=0f;
         float z = 0f;
  
         float angle = 20f;
-        var unityMeter_Per1Meter = GetGPSToRadius(_map, unit_pos); //m당 현재 유니티화면에서 단위.
+        float unityMeter_Per1Meter = GetGPSToRadius(_map, unit_pos); //m당 현재 유니티화면에서 단위.
+
         for(int i=0;i<(segments+1);i++) {
-            x = Mathf.Cos(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * 2;// *2는 스케일이 반으로 출력되는 문제가 있어서.
-            y = Mathf.Sin(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * 2;
+            x = Mathf.Cos(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * 1.6f;// *1.8는 스케일이 반으로 출력되는 문제가 있어서. float 문제?
+            y = Mathf.Sin(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * 1.6f;
+            
  
             line.SetPosition (i,new Vector3(x,y,z));
+            
             angle += (360f / segments);
         }
     }
+
+    void CreateMarker(){
+        /*
+            마커 생성하는 함수.
+            마커는 클릭시, 안내말이 나오는것으로 변경.
+
+
+            확대되야지 나타나는 것들도 존재.
+        */
+        float x=0f;
+        float y=0f;
+        float z = 0f;
+        var unityMeter_Per1Meter = GetGPSToRadius(_map, unit_pos); //m당 현재 유니티화면에서 단위.
+        
+        marker.transform.localPosition = new Vector3(x,y,z);
+        marker.transform.localScale = new Vector3(_spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter);
+
+    }
+    void CreateTitle()
+    {
+        //마커 이외의 것은 2d
+    }
+
+    
+
     //60.19202138798248, 24.964615042211662
     public Vector3 GetGPSToWorld(AbstractMap map, Vector2d LatLon){
         var worldPos = map.GeoToWorldPosition(LatLon);
