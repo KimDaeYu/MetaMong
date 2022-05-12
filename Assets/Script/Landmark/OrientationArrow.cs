@@ -1,15 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 using ARLocation;
 public class OrientationArrow : MonoBehaviour
 {
     public GameObject Arrow_cone;
-    public GameObject SetCoordBtn;
-    public GameObject Origin;
+    public GameObject InfoText;
+    public GameObject ViewAR;
 
     private ARLocation.ARLocationProvider locationProvider;
     private GameObject mainCamera;
+    
+
     private bool isMainCameraNull;
     
     public int precision = 10;
@@ -51,23 +53,28 @@ public class OrientationArrow : MonoBehaviour
             verticladiff = (360 + verticladiff * -1);   
         }
 
-        Debug.Log(horizondiff.ToString()+ "//" +verticladiff.ToString());
+        //Debug.Log(horizondiff.ToString()+ "//" +verticladiff.ToString());
         if(horizondiff < precision && verticladiff < precision){
             Arrow_cone.GetComponent<MeshRenderer>().materials[0].color = Color.green;
-            SetCoordBtn.SetActive(true);
+
+            InfoText.GetComponent<TextMeshProUGUI>().text = "해당 부분을 클릭해 고정해주세요!";
+            gameObject.GetComponent<ARPointCheck>().enabled = true;
+            ViewAR.GetComponent<Toggle>().isOn = true;
+
+            //SetCoordBtn.SetActive(true);
         }else{
             Arrow_cone.GetComponent<MeshRenderer>().materials[0].color = Color.red;
-            SetCoordBtn.SetActive(false);
+            
+            InfoText.GetComponent<TextMeshProUGUI>().text = "해당위치를 찾아주세요!";
+            gameObject.GetComponent<ARPointCheck>().enabled = false;
+            gameObject.GetComponent<ARPointCheck>().SetCoordBtn.SetActive(false);
+            ViewAR.GetComponent<Toggle>().isOn = false;
             ARreset();
         }
     }
     public void ARreset(){
         //AR/DIST reset active
 
-    }
-
-    public void SetOrigin(){
-        Origin.transform.position = gameObject.GetComponent<ARPointCheck>().LastHitPose;
     }
 
     public void TargetUpdate(Vector3 _Target, Vector3 flag){

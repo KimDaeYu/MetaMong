@@ -12,23 +12,15 @@ public class NewStory : MonoBehaviour
     [SerializeField] GameObject StoryText;
     [SerializeField] GameObject Content;
 
+    public List<Vector3> testset;
+    public GameObject SNSManager;
+    
+
     public Vector3 targetPos = new Vector3(0,0,0); 
     public Sprite targetImage;
     public bool landscape = true;
     public void AddNewStoryText(Vector3 Pos){
-        
-        //Content
-        StoryText.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = Content.GetComponent<TMP_InputField>().text;
-        
-        var info = StoryText.transform.GetChild(1);
-        //Date
-        info.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = System.DateTime.Now.ToString("yyyy-MM-dd");
-        //Name
-        info.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = "ID " + Random.Range(1000,2000).ToString();
-        
-        var NewObject = Instantiate(StoryText, Pos, Quaternion.identity);
-        NewObject.name = "Story" + Random.Range(1000,2000).ToString();
-        NewObject.transform.SetParent(StoryView.transform);
+        SNSManager.GetComponent<SNSManager>().AddPost(Content.GetComponent<TMP_InputField>().text, Pos);
     }
 
 
@@ -108,9 +100,21 @@ public class NewStory : MonoBehaviour
         AddNewStoryImage(TmpPos);
         ClickImageCancel();
     }
+
     public void ClickImageCancel(){
         //clear
         GameObject.Find("NewStory").GetComponent<Toggle>().isOn = false;
         gameObject.GetComponent<Gallery>().ImagePanel.SetActive(false);
     }
+
+    public void MakeInstance(){
+        foreach (var item in testset)
+        {
+            var NewObject = Instantiate(StoryText, item, Quaternion.identity);
+            NewObject.name = "Story" + Random.Range(1000,2000).ToString();
+            NewObject.transform.SetParent(StoryView.transform);
+            //NewObject.transform.GetChild(1).gameObject.transform.localPosition = item;
+        }
+    }
+
 }

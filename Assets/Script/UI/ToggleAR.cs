@@ -13,9 +13,9 @@ public class ToggleAR : MonoBehaviour
         VisualizePlanes(isOn);
         VisualizePoints(isOn);
         if(!isOn){
-            gameObject.GetComponent<Image>().color = new Color32(40,40,40,150);
+            gameObject.GetComponent<Image>().color = new Color32(255,255,255,150);
         }else{
-            gameObject.GetComponent<Image>().color = new Color32(40,40,40,255);
+            gameObject.GetComponent<Image>().color = new Color32(255,255,255,255);
         }
     }
 

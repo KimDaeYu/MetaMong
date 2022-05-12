@@ -7,10 +7,11 @@ using TMPro;
 public class ARPointCheck : MonoBehaviour
 {
     public ARRaycastManager arRaycaster;
+    public GameObject Origin;
+    // GameObject line;
+    public GameObject SetCoordBtn;
 
-    public GameObject line;
     private Vector3 mousePos;
-
     private int currLines = 0;
 
     // Start is called before the first frame update
@@ -40,16 +41,19 @@ public class ARPointCheck : MonoBehaviour
             if(arRaycaster.Raycast(touch.position,hits, UnityEngine.XR.ARSubsystems.TrackableType.FeaturePoint)){
             //if(arRaycaster.Raycast(touch.position,hits, UnityEngine.XR.ARSubsystems.TrackableType.Planes)){
                 Pose hitPose = hits[0].pose;
-                line.transform.Find("Line").gameObject.GetComponent<LineRenderer>().SetPosition(0, hitPose.position);
-                line.transform.Find("Line").gameObject.GetComponent<LineRenderer>().SetPosition(1, Camera.main.transform.position);
-                line.transform.Find("Start").position = hitPose.position;
                 LastHitPose = hitPose.position;
-                line.transform.Find("End").position = Camera.main.transform.position;
-                line.transform.Find("Length").position = (Camera.main.transform.position + hitPose.position) / 2;
+                Origin.transform.position = LastHitPose;
+                SetCoordBtn.SetActive(true);
+
+                // line.transform.Find("Line").gameObject.GetComponent<LineRenderer>().SetPosition(0, hitPose.position);
+                // line.transform.Find("Line").gameObject.GetComponent<LineRenderer>().SetPosition(1, Camera.main.transform.position);
+                // line.transform.Find("Start").position = hitPose.position;
+                // line.transform.Find("End").position = Camera.main.transform.position;
+                // line.transform.Find("Length").position = (Camera.main.transform.position + hitPose.position) / 2;
 
                 measured_dis = Vector3.Distance(hitPose.position, Camera.main.transform.position);
                 GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += measured_dis.ToString() + " measured!!\n";
-                line.transform.Find("Length").gameObject.GetComponent<TextMeshPro>().SetText(measured_dis.ToString() + "m");
+                //line.transform.Find("Length").gameObject.GetComponent<TextMeshPro>().SetText(measured_dis.ToString() + "m");
                 
                 //GameObject spawnObject;
                 GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " " + hits[0].pose.position.ToString() + " AR Hit!!\n";
@@ -57,7 +61,6 @@ public class ARPointCheck : MonoBehaviour
         }
         if(Input.GetMouseButtonUp(0)){
             ARtouch = false;
-            gameObject.GetComponent<OrientationArrow>().SetOrigin();
         }
     }
 
