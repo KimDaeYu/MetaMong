@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class GpsManager : MonoBehaviour
 {
+
+    /*
+    사용안함.
+    */
     public static double first_Lat;//최초 경도
     public static double first_Long;//최초 경도
     public static double first_Height;//최초 고도

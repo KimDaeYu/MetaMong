@@ -18,8 +18,6 @@ public class MetamongLogLocationProvider : MonoBehaviour
 	/*
 		휴대폰에서 사용자 위치 불러오는 class
 
-		굳이 클래스에서 사용을 해야할지. mapbox의 location에서 바로 구할 수 있는데.
-
 	*/
 
 		[SerializeField]
