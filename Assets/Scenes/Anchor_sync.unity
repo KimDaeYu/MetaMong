@@ -9762,6 +9762,7 @@ MonoBehaviour:
   statusText: {fileID: 882963625}
   TextPostTemplate: {fileID: 1517643085}
   ImagePostTemplate: {fileID: 1759149866}
+  PImagePostTemplate: {fileID: 1960816292}
   postParent: {fileID: 1441005016}
   postInput: {fileID: 0}
   addPostButton: {fileID: 0}
@@ -10681,8 +10682,10 @@ MonoBehaviour:
   StoryText: {fileID: 40386354619190554, guid: f40a7ea4d49cfc947b64e00227983239, type: 3}
   Content: {fileID: 171282250}
   testset: []
+  SNSManager: {fileID: 903198430}
   targetPos: {x: 0, y: 0, z: 0}
   targetImage: {fileID: 0}
+  targetTexture2D: {fileID: 0}
   landscape: 1
 --- !u!114 &1031837110
 MonoBehaviour:
@@ -13605,14 +13608,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1668553785}
-  m_LocalRotation: {x: -0, y: 0.042225193, z: -0, w: 0.99910814}
+  m_LocalRotation: {x: -0, y: -0.06577773, z: -0, w: 0.99783427}
   m_LocalPosition: {x: 0, y: 0, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 388525031}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 4.84, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -7.543, z: 0}
 --- !u!114 &1668553791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14640,6 +14643,12 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 1
+--- !u!1 &1960816292 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 73447026810968246, guid: 1ea01588ff84055479dfd402b54f09ca,
+    type: 3}
+  m_PrefabInstance: {fileID: 1000788027}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1982620383
 GameObject:
   m_ObjectHideFlags: 0

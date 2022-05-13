@@ -37,7 +37,7 @@ public class Gallery : MonoBehaviour
                 ImagePanel.transform.GetChild(0).GetComponent<Image>().sprite = img;
                 
                 gameObject.GetComponent<NewStory>().targetImage = img;
-                
+                gameObject.GetComponent<NewStory>().targetTexture2D = texture;
             }
         } );
         

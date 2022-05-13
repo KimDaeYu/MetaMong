@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using TMPro;
 
 public class FeedBackControl : MonoBehaviour
 {
+    public GameObject SNSManager;
     public ARRaycastManager arRaycaster;
     public GameObject CommentPanel;
 
@@ -39,31 +41,13 @@ public class FeedBackControl : MonoBehaviour
                     Story = hit.collider.gameObject.transform.parent.parent.gameObject;
                     GameObject Info = Story.transform.GetChild(1).gameObject;
                     GameObject Name = Info.transform.GetChild(1).gameObject;
-
+                    SNSManager.GetComponent<SNSManager>().GetComments(Story.name.Substring(5));
                     Debug.Log(Name.GetComponent<TextMeshPro>().text.Substring(3));
                     
                     GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " " + Story.name + " Hit!!!\n";
                     CommentPanel.SetActive(true);
                     UIManager.GetComponent<Comment>().TargetStory = Story;
                     UIManager.GetComponent<Comment>().ClearCmtList();
-                    //댓글 만드는 오브젝트 함수
-                    if(itemMap.ContainsKey(Story.name)){
-                        foreach (CmtItem t in itemMap[Story.name])
-                        {
-                            UIManager.GetComponent<Comment>().printCmt(t.content,t.date,t.id);
-                        }
-                    }
-
-                    foreach (KeyValuePair<string,List <CmtItem>> pair in itemMap)
-                    {
-                        List<CmtItem> item = pair.Value;
-                        Debug.Log(pair.Key);
-                        Debug.Log("===========");
-                        foreach (CmtItem t in item)
-                        {
-                            t.Show();
-                        }
-                    }
                 }
 
                 if(hit.collider.gameObject.CompareTag("Like")){
@@ -78,13 +62,16 @@ public class FeedBackControl : MonoBehaviour
                     if(Like.transform.GetChild(0).gameObject.activeSelf == true){ 
                         var Count = Like.transform.GetChild(1).gameObject;
                         var num = int.Parse(Count.GetComponent<TextMeshPro>().text) + 1;
-                        Count.GetComponent<TextMeshPro>().text = "00" + num.ToString();
+                        //Story.name.subString(Story.name.IndexOf("-"))
+                        var real_num = SNSManager.GetComponent<SNSManager>().ClickedLike(Story.name.Substring(5),true);
+                        Count.GetComponent<TextMeshPro>().text = String.Format("{0:000}", num);
                         Like.transform.GetChild(0).gameObject.SetActive(false);
                         Like.transform.GetChild(2).gameObject.SetActive(true);
                     }else{
                         var Count = Like.transform.GetChild(1).gameObject;
                         var num = int.Parse(Count.GetComponent<TextMeshPro>().text) - 1;
-                        Count.GetComponent<TextMeshPro>().text = "00" + num.ToString();
+                        var real_num = SNSManager.GetComponent<SNSManager>().ClickedLike(Story.name.Substring(5),false);
+                        Count.GetComponent<TextMeshPro>().text = String.Format("{0:000}", num);
                         Like.transform.GetChild(0).gameObject.SetActive(true);
                         Like.transform.GetChild(2).gameObject.SetActive(false);
                     }

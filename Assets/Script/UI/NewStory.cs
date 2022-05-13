@@ -18,6 +18,8 @@ public class NewStory : MonoBehaviour
 
     public Vector3 targetPos = new Vector3(0,0,0); 
     public Sprite targetImage;
+
+    public Texture2D targetTexture2D;
     public bool landscape = true;
     public void AddNewStoryText(Vector3 Pos){
         SNSManager.GetComponent<SNSManager>().AddPost(Content.GetComponent<TMP_InputField>().text, Pos);
@@ -47,46 +49,27 @@ public class NewStory : MonoBehaviour
     }
 
     public void AddNewStoryImage(Vector3 Pos){
-        Vector3 InfoPos;
-        //Content
-        var SelectedPrefabs = StoryImage;
-        if(!landscape){
-            SelectedPrefabs = StoryImageP;
-        }
-        
-        var Temp = SelectedPrefabs.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
-        Temp.sprite = targetImage;
-        //Size 
-        if(landscape){
-            Temp.size = new Vector2(3,targetImage.bounds.size[1] * 3 / targetImage.bounds.size[0]);
-            InfoPos = new Vector3(0,( (2f - Temp.size[1]) / 2f), 0);
-            GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += "Landscape! pos " + Temp.size.ToString() + "\n";
-            //SelectedPrefabs.transform.GetChild(0).gameObject.transform.localPosition = new Vector3(0,((2f - Temp.size[1]) / 2f) * -1, 0);
-        }else{
-            Temp.size = new Vector2(targetImage.bounds.size[0] * 3 / targetImage.bounds.size[1],3);
-            InfoPos = new Vector3(0.3f + ((2f - Temp.size[0]) / 2f),0,0);
-            GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += "Protrait! pos " + Temp.size.ToString() + "\n";
-            //SelectedPrefabs.transform.GetChild(0).gameObject.transform.localPosition = new Vector3( -0.3f - ((2f - Temp.size[0]) / 2f),0,0);
-        }
-        SelectedPrefabs.transform.GetChild(0).gameObject.GetComponent<BoxCollider>().size = new Vector3(Temp.size[0],Temp.size[1],0.1f);
-        //Info 
-        var info = SelectedPrefabs.transform.GetChild(1);
-        //Date
-        info.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = System.DateTime.Now.ToString("yyyy-MM-dd");
-        //Name
-        info.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text = "ID " + Random.Range(1000,2000).ToString();
-        Temp.flipX = true;
-        
-        
-        
-        var NewObject = Instantiate(SelectedPrefabs, Pos, Quaternion.identity);
-        NewObject.transform.SetParent(StoryView.transform);
-        NewObject.transform.GetChild(1).gameObject.transform.localPosition = InfoPos;
-        if(landscape){
-            NewObject.transform.GetChild(2).gameObject.transform.localPosition = InfoPos;
-        }
+        SNSManager.GetComponent<SNSManager>().AddPost(duplicateTexture(targetTexture2D), Pos);
     }
+    Texture2D duplicateTexture(Texture2D source)
+    {
+        RenderTexture renderTex = RenderTexture.GetTemporary(
+                    source.width,
+                    source.height,
+                    0,
+                    RenderTextureFormat.Default,
+                    RenderTextureReadWrite.Linear);
 
+        Graphics.Blit(source, renderTex);
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = renderTex;
+        Texture2D readableText = new Texture2D(source.width, source.height);
+        readableText.ReadPixels(new Rect(0, 0, renderTex.width, renderTex.height), 0, 0);
+        readableText.Apply();
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(renderTex);
+        return readableText;
+    }
     public void ClickImageOK(){
         var TmpPos = new Vector3(0,0,0);
         GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " target " + targetPos.ToString() + "\n";

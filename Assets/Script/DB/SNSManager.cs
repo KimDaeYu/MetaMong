@@ -14,6 +14,7 @@ public class SNSManager : MonoBehaviour
 
     public GameObject TextPostTemplate;
     public GameObject ImagePostTemplate;
+    public GameObject PImagePostTemplate;
     public Transform postParent;
 
     public TMP_InputField postInput;
@@ -92,12 +93,27 @@ public class SNSManager : MonoBehaviour
         });
     }
 
+    bool landscape = true;
     void PostAddedListener(DBManager.Post post)
     {  
         if(post.type == DBManager.ContentType.Image){
+            Debug.Log("Add Image!");
+            Texture2D content = post.content as Texture2D;
+            if(content.width > content.height){
+                GameObject IpostObj = Instantiate(ImagePostTemplate, postParent);
+                IpostObj.transform.Find("Image").GetComponent<RectTransform>().sizeDelta = new Vector2(800,content.height * 800 / content.width );
+                landscape = true;
+                InitializePost(IpostObj, post);
+                IpostObj.SetActive(true);
+            }else{
+                GameObject IpostObj = Instantiate(PImagePostTemplate, postParent);
+                IpostObj.transform.Find("Image").GetComponent<RectTransform>().sizeDelta = new Vector2(content.width * 800 / content.height ,800);
+                landscape = false;
+                InitializePost(IpostObj, post);
+                IpostObj.SetActive(true);
+            }
             GameObject postObj = Instantiate(ImagePostTemplate, postParent);
-            InitializePost(postObj, post);
-            postObj.SetActive(true);
+            
         }else{
             GameObject postObj = Instantiate(TextPostTemplate, postParent);
             InitializePost(postObj, post);
@@ -107,10 +123,29 @@ public class SNSManager : MonoBehaviour
 
     void InitializePost(GameObject postObj, DBManager.Post post)
     {
-        var content = postObj.transform.Find("Content").GetComponent<TextMeshPro>();
         if(post.type == DBManager.ContentType.Image){
-            //content.text = post.content;
+            Vector3 InfoPos;
+            Texture2D content = post.content as Texture2D;
+            Rect rect = new Rect(0, 0, content.width, content.height);
+            Sprite img = Sprite.Create(content, rect, new Vector2(0.5f, 0.5f));
+            var Temp = postObj.transform.Find("Image").GetComponent<SpriteRenderer>();
+            Temp.sprite = img;
+            if(landscape){
+                Temp.size = new Vector2(3,img.bounds.size[1] * 3 / img.bounds.size[0]);
+                InfoPos = new Vector3(0,( (2f - Temp.size[1]) / 2f), 0);
+                //SelectedPrefabs.transform.GetChild(0).gameObject.transform.localPosition = new Vector3(0,((2f - Temp.size[1]) / 2f) * -1, 0);
+            }else{
+                Temp.size = new Vector2(img.bounds.size[0] * 3 / img.bounds.size[1],3);
+                InfoPos = new Vector3(0.3f + ((2f - Temp.size[0]) / 2f),0,0);
+                //SelectedPrefabs.transform.GetChild(0).gameObject.transform.localPosition = new Vector3( -0.3f - ((2f - Temp.size[0]) / 2f),0,0);
+            }
+            Temp.flipX = true;
+            postObj.transform.Find("Info").transform.localPosition = InfoPos;
+            if(landscape){
+                postObj.transform.Find("FeedBack").transform.localPosition = InfoPos;
+            }
         }else{
+            TextMeshPro content = postObj.transform.Find("Content").GetComponent<TextMeshPro>();
             content.text = post.content as string;
         }
         
@@ -128,11 +163,6 @@ public class SNSManager : MonoBehaviour
             Like.transform.GetChild(2).gameObject.SetActive(false);
         }
 
-        //magazine/ammo
-        //var likesBtn = postObj.transform.Find("Like").GetComponent<Button>();
-        //var commentsBtn = postObj.transform.Find("CommentsButton").GetComponent<Button>();
-        //var randomCommentBtn = postObj.transform.Find("RandomCommentButton").GetComponent<Button>();
-
         postObj.name = "Story" + post.id;
         //content.text = post.content;
         date.text = String.Format("{0:yyyy-MM-dd}", post.date);
@@ -142,30 +172,6 @@ public class SNSManager : MonoBehaviour
 
         //position update
         postObj.transform.position = post.position;
-
-        /*
-        
-        randomCommentBtn.onClick.AddListener(() => {
-            if (db.currentSpaceId == null)
-            {
-                return;
-            }
-            randomCommentBtn.interactable = false;
-            db.AddComment(post.id, System.DateTime.Now.ToString()).ContinueWith((comments) =>
-            {
-                if (comments != null)
-                {
-                    commentsBtn.GetComponentInChildren<TMP_Text>().text = comments.Length.ToString();
-                    //Debug.Log(string.Format("{0}\n{1}\n{2}\n{3}", comment.id, comment.userId, comment.date, comment.content));
-                }
-                else
-                {
-                    Debug.Log("Failed to add comment");
-                }
-                randomCommentBtn.interactable = true;
-            });
-        });
-        */
     }
 
     public int ClickedLike(string postid, bool like){
@@ -239,6 +245,30 @@ public class SNSManager : MonoBehaviour
             return;
         }
         if (string.IsNullOrWhiteSpace(content))
+        {
+            Debug.Log("null or whitespace post");
+        }
+
+        db.AddPost(content, pos).ContinueWith((post) =>
+        {
+            if (post == null)
+            {
+                Debug.Log("Failed to add post");
+            }
+            else
+            {
+                Debug.Log(post);
+            }
+        });
+    }
+
+    public void AddPost(Texture2D content, Vector3 pos)
+    {
+        if (db.currentSpaceId == null)
+        {
+            return;
+        }
+        if (content == null)
         {
             Debug.Log("null or whitespace post");
         }
