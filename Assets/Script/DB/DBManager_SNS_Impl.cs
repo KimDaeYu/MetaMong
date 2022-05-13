@@ -37,19 +37,31 @@ public partial class DBManager : MonoBehaviour
         return 0;
     }
 
-    Post SnapshotToPost(DataSnapshot snapshot)
+    async UniTask<Post> SnapshotToPost(DataSnapshot snapshot)
     {
         float x = (float)GetDoubleValue(snapshot.Child("x"));
         float y = (float)GetDoubleValue(snapshot.Child("y"));
         float z = (float)GetDoubleValue(snapshot.Child("z"));
 
+        ContentType type = (ContentType)(long)snapshot.Child("type").Value;
+        object content;
+        if (type == ContentType.Text)
+        {
+            content = snapshot.Child("content").Value;
+        }
+        else
+        {
+            string path = snapshot.Child("content").Value as string;
+            content = await DownloadImage(path);
+        }
+        
         return new Post(
             snapshot.Key,
             snapshot.Child("userId").Value as string,
             snapshot.Child("userName").Value as string,
             System.DateTime.FromBinary((long)snapshot.Child("date").Value),
-            (ContentType)(long)snapshot.Child("type").Value,
-            snapshot.Child("content").Value,
+            type,
+            content,
             new Vector3(x, y, z),
             (int)(long)snapshot.Child("likes").Value,
             (int)(long)snapshot.Child("comments").Value,
@@ -73,7 +85,7 @@ public partial class DBManager : MonoBehaviour
 
     void HandlePostAdded(object sender, ChildChangedEventArgs args)
     {
-        postAddedListener.Invoke(SnapshotToPost(args.Snapshot));
+        SnapshotToPost(args.Snapshot).ContinueWith(postAddedListener);
     }
 
     /// <summary>
