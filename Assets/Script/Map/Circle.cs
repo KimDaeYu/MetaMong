@@ -5,6 +5,7 @@ using Mapbox.Utils;
 using Mapbox.Unity.Map;
 using Mapbox.Unity.MeshGeneration.Factories;
 using Mapbox.Unity.Utilities;
+using TMPro;
 
 public class Circle : MonoBehaviour {
     /*
@@ -23,29 +24,35 @@ public class Circle : MonoBehaviour {
     public string Space_title="";// space 생성시 addspace에서 자동으로 입력해줌.
 
     LineRenderer line;
+
+    //자식들.
     GameObject marker;
     GameObject marker_title; // title 담기는 ui
+    GameObject marker_text;
 
     float _spawnScale = 15f;
+
+    float _spawnScale_text_zoomIn = 40f;
+    float _spawnScale_text_zoomOut = 60f;
 
     private Vector2d unit_pos=new Vector2d(60.19191360d, 24.96843000d);// 유니티 좌표로 변환하기위한 데이터 상수.
     
     void Start () {
         line = gameObject.GetComponent<LineRenderer> ();
         marker = transform.Find("Marker").gameObject;
-        marker_title = transform.Find("Content").gameObject;
+        marker_text = transform.Find("CircleText").gameObject;
+        marker_title = transform.Find("CircleText/Content").gameObject;
 
 
         line.SetVertexCount(segments + 1);
         line.useWorldSpace = false;
         CreatePoints();
-        CreateMarker();
         UpdateMarker();
     }
     
     void Update(){
+        
         CreatePoints();
-        CreateMarker();
         UpdateMarker();
 
         gameObject.transform.position = GetGPSToWorld(_map, Pos) + new Vector3(0,5,0); // 5만큼 높이 올려서 생성.
@@ -55,8 +62,27 @@ public class Circle : MonoBehaviour {
         //마커 정보를 수정하거나 등, 내용 업데이트 된 것을 반영.
         if(marker_title==null)Debug.Log("오류");
 
-        marker_title.GetComponent<TextMesh>().text = Space_title;
+        var unityMeter_Per1Meter = GetGPSToRadius(_map, unit_pos); //m당 현재 유니티화면에서 단위.
         
+        marker.transform.localPosition = new Vector3(0f,0f,0f); //원의 중심에 위치하도록
+        marker.transform.localScale = new Vector3(_spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter);
+        
+        marker_title.GetComponent<TextMeshPro>().text = Space_title;
+        
+        //텍스트창 크기 조절 
+        float text_y = 30f;
+        marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f); 
+
+
+        //줌인이냐 줌아웃이냐에 따라 달라져야한다.
+        bool iszoom = GameObject.Find("ArSpaceManager").GetComponent<AddSpace>().is_zoom(); 
+
+        if(iszoom){
+            marker_text.transform.localScale = new Vector3(_spawnScale_text_zoomIn*unityMeter_Per1Meter, _spawnScale_text_zoomIn*unityMeter_Per1Meter, _spawnScale_text_zoomIn*unityMeter_Per1Meter);
+        }else{
+            marker_text.transform.localScale = new Vector3(_spawnScale_text_zoomOut*unityMeter_Per1Meter, _spawnScale_text_zoomOut*unityMeter_Per1Meter, _spawnScale_text_zoomOut*unityMeter_Per1Meter);
+        }
+                
     }
 
     void CreatePoints () {
@@ -73,7 +99,7 @@ public class Circle : MonoBehaviour {
 
         for(int i=0;i<(segments+1);i++) {
             x = Mathf.Cos(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * 1.6f;// *1.8는 스케일이 반으로 출력되는 문제가 있어서. float 문제?
-            y = Mathf.Sin(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * 1.6f;
+            z = Mathf.Sin(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * 1.6f;
             
  
             line.SetPosition (i,new Vector3(x,y,z));
@@ -81,29 +107,6 @@ public class Circle : MonoBehaviour {
             angle += (360f / segments);
         }
     }
-
-    void CreateMarker(){
-        /*
-            마커 생성하는 함수.
-            마커는 클릭시, 안내말이 나오는것으로 변경.
-
-
-            확대되야지 나타나는 것들도 존재.
-        */
-        float x=0f;
-        float y=0f;
-        float z = 0f;
-        var unityMeter_Per1Meter = GetGPSToRadius(_map, unit_pos); //m당 현재 유니티화면에서 단위.
-        
-        marker.transform.localPosition = new Vector3(x,y,z);
-        marker.transform.localScale = new Vector3(_spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter);
-
-    }
-    void CreateTitle()
-    {
-        //마커 이외의 것은 2d
-    }
-
     
 
     //60.19202138798248, 24.964615042211662

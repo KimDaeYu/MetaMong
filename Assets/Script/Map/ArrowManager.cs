@@ -15,7 +15,7 @@ public class ArrowManager : MonoBehaviour
         if(target==null){
             
             gameObject.SetActive(false);
-
+            
 
         }
         

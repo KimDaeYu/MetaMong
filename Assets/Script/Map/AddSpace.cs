@@ -75,9 +75,12 @@ public class AddSpace : MonoBehaviour
 		public GameObject get_current_space(){
 			//현재 어디 스페이스에 위치해있는지 index를 출력해주는 함수.
 			//arrow manager에 사용.
-			
 			return target_object;
+		}
 
+		public bool is_zoom(){
+			//현재 줌 상태인지 확인. space안에 위치해있는지.
+			return user_in_flag;
 		}
 
 		
@@ -96,7 +99,7 @@ public class AddSpace : MonoBehaviour
 			
 
 			if(user_position.x==0){
-				Debug.Log("null");
+				Debug.Log("유저 좌표가 설정되지 않았습니다.");
 				return;
 			}
 
