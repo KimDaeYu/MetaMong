@@ -74,7 +74,7 @@ public class Circle : MonoBehaviour {
         marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f); 
 
 
-        //줌인이냐 줌아웃이냐에 따라 달라져야한다.
+        //줌인이냐 줌아웃이냐에 따라 TEXT 크기를 달리 설정.
         bool iszoom = GameObject.Find("ArSpaceManager").GetComponent<AddSpace>().is_zoom(); 
 
         if(iszoom){
