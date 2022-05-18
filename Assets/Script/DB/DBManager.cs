@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Firebase;
 using Firebase.Database;
 using Firebase.Storage;
+using Firebase.Functions;
 using Newtonsoft.Json.Linq;
 
 public partial class DBManager : MonoBehaviour
@@ -18,6 +19,7 @@ public partial class DBManager : MonoBehaviour
     FirebaseApp app;
     FirebaseDatabase db;
     FirebaseStorage storage;
+    FirebaseFunctions functions;
 
     private void Awake()
     {
@@ -40,6 +42,7 @@ public partial class DBManager : MonoBehaviour
         db = FirebaseDatabase.GetInstance(app, dbUrl);
         db.SetPersistenceEnabled(false);
         storage = FirebaseStorage.GetInstance(app);
+        functions = FirebaseFunctions.GetInstance(app, "asia-northeast3");
     }
 
     // Start is called before the first frame update
@@ -48,106 +51,161 @@ public partial class DBManager : MonoBehaviour
         InitSNS();
     }
 
-    public class ARSpace
+    async UniTask<string> Push(string path, object data)
     {
-        public string id;
-        private string imageName;
-        public string name;
-        public double x;
-        public double y;
-
-        public async UniTask GetImage(System.Action<Texture2D> callback)
+        var newRef = db.GetReference(path).Push();
+        try
         {
-            var imageRef = Instance.storage.GetReference("landmarks/" + imageName);
-            System.Uri imageUrl = null;
-            try
-            {
-                imageUrl = await imageRef.GetDownloadUrlAsync();
-            }
-            catch (StorageException e) when (e.ErrorCode == StorageException.ErrorObjectNotFound)
-            {
-                // Debug.Log("ErrorObjectNotFound");
-            }
+            await newRef.SetValueAsync(data);
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+            return null;
+        }
+        return newRef.Key;
+    }
+
+    async UniTask<bool> SetValue(DatabaseReference reference, object data)
+    {
+        try
+        {
+            await reference.SetValueAsync(data);
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+            return false;
+        }
+        return true;
+    }
+
+    async UniTask<DataSnapshot> GetValue(DatabaseReference reference)
+    {
+        try
+        {
+            return await reference.GetValueAsync();
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+            return null;
         }
     }
 
-    void GetImage(string location)
+    async UniTask<StorageReference> UploadImage(string location, Texture2D image)
     {
+        // Readable한 image만 주어진다고 가정하고 체크 생략
 
-    }
-
-    struct ARSPaceResponse
-    {
-        public string id;
-        public string imageName;
-        public string name;
-        public double x;
-        public double y;
-    }
-
-    public enum CreateARSpaceError
-    {
-        None,
-        NetworkError,
-    }
-
-    string GenerateImageName(string name, double x, double y)
-    {
-        string planeName = string.Format("{0}-{1}-{2}", name, x, y);
-        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(planeName);
-        string encodedName = System.Convert.ToBase64String(bytes);
-        string urlSafeName = encodedName.Replace('+', '-').Replace('/', '_');
-        return urlSafeName;
-    }
-
-    struct CreateARSpaceResult
-    {
-        public CreateARSpaceError error;
-        public ARSpace space;
-    }
-
-    async UniTask<CreateARSpaceResult> CreateARSpace(Texture2D image, string name, double x, double y)
-    {
-        string imageName = GenerateImageName(name, x, y);
-        await storage.GetReference("landmarks/" + imageName).PutBytesAsync(image.EncodeToPNG());
-
-        var body = new Dictionary<string, string>()
+        var newRef = storage.GetReference(location);
+        try
         {
-            {"name", name },
-            {"image-name", imageName },
-            {"latitude", x.ToString() },
-            {"longitude", y.ToString() }
-        };
-        UnityWebRequest www = UnityWebRequest.Post(serverAddr + "/spaces", body);
+            await newRef.PutBytesAsync(image.EncodeToPNG());
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+            return null;
+        }
+        return newRef;
+    }
+
+    async UniTask<Texture2D> DownloadImage(string location)
+    {
+        System.Uri url;
+        try
+        {
+            url = await storage.GetReference(location).GetDownloadUrlAsync();
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+            return null;
+        }
+
+        var www = UnityWebRequestTexture.GetTexture(url);
         await www.SendWebRequest();
-        
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log("Error");
-            return new CreateARSpaceResult { error = CreateARSpaceError.NetworkError };
+            Debug.Log(www.error);
+            return null;
+        }
+        else
+        {
+            return DownloadHandlerTexture.GetContent(www);
+        }
+    }
+
+    async UniTask<object> CallFunction(HttpsCallableReference reference, object data)
+    {
+        HttpsCallableResult result = null;
+        try
+        {
+            result = await reference.CallAsync(data);
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
         }
 
-        JObject json = JObject.Parse(www.downloadHandler.text);
-        if (json["status"].Value<string>() != "success")
-        {
-            Debug.Log(json["message"].Value<string>());
-            return new CreateARSpaceResult { error = CreateARSpaceError.NetworkError };
-        }
+        // Debug.Log(result.Data);
+        return result.Data;
+    }
 
-        bool isAdded = json["isAdded"].Value<bool>();
-        ARSPaceResponse spaceResponse = json["space"].ToObject<ARSPaceResponse>();
-        ARSpace space = new ARSpace
+    async UniTask<string> HTTPGet(string url, Dictionary<string, object> query = null)
+    {
+        if (query != null)
         {
-            id = spaceResponse.id,
-            name = spaceResponse.name,
-            x = spaceResponse.x,
-            y = spaceResponse.y,
-        };
-        if (!isAdded)
-        {
-            // storage.GetReference()
+            url = url + '?';
+            foreach (var entry in query)
+            {
+                url = url + entry.Key + '=' + entry.Value + '&';
+            }
         }
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        try
+        {
+            await www.SendWebRequest();
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+            return null;
+        }
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+            return null;
+        }
+        else
+        {
+            return www.downloadHandler.text;
+        }
+    }
 
-        return new CreateARSpaceResult { error = CreateARSpaceError.None, space = new ARSpace { } };
+    async UniTask<string> HTTPPostWithJson(string url, string json)
+    {
+        UnityWebRequest www = new UnityWebRequest(url, "POST");
+        www.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
+        www.SetRequestHeader("Content-Type", "application/json");
+        www.downloadHandler = new DownloadHandlerBuffer();
+        try
+        {
+            await www.SendWebRequest();
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+            return null;
+        }
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+            return null;
+        }
+        else
+        {
+            return www.downloadHandler.text;
+        }
     }
 }

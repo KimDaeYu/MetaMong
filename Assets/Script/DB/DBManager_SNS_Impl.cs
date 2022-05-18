@@ -7,7 +7,6 @@ using Cysharp.Threading.Tasks;
 
 public partial class DBManager : MonoBehaviour
 {
-    FirebaseFunctions functions;
     HttpsCallableReference addComment;
     HttpsCallableReference setLike;
 
@@ -77,7 +76,6 @@ public partial class DBManager : MonoBehaviour
 
     void InitSNS()
     {
-        functions = FirebaseFunctions.GetInstance(app, "asia-northeast3");
         addComment = functions.GetHttpsCallable("addComment");
         setLike = functions.GetHttpsCallable("setLike");
         likes = new HashSet<string>();
@@ -193,7 +191,8 @@ public partial class DBManager : MonoBehaviour
         if (contentType == ContentType.Image)
         {
             string imageLocation = "posts/" + currentSpaceRef.Key + "/" + newRef.Key;
-            if (! await UploadImage(imageLocation, content as Texture2D))
+            var imageRef = await UploadImage(imageLocation, content as Texture2D);
+            if (imageRef == null)
             {
                 return null;
             }
