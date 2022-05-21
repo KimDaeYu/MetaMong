@@ -3,18 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using Mapbox.Utils;
+using TMPro;
 
 public class SpaceDBTestScene : MonoBehaviour
 {
     public RawImage image;
 
+    public TMP_Dropdown create_dropdown;
+    public TMP_Dropdown search_dropdown;
+
+    public GameObject create_button;
+    public GameObject search_button;
+
+
+    public List<space_data> Arspace_list;
+    
+
+    private List<string> name_list = new List<string>();
+
+
+
     AuthManager auth;
     DBManager db;
+
+    [System.Serializable]
+    public class space_data
+    {
+        public string ArSpaceName;
+        public Vector2d ArSpaceGps;
+    }
+
        
     void Start()
     {
         auth = AuthManager.Instance;
         db = DBManager.Instance;
+        create_dropdown.ClearOptions();
+        search_dropdown.ClearOptions();
+
+
+        foreach (var space_var in Arspace_list){
+            name_list.Add(space_var.ArSpaceName);
+        }
+
+        create_dropdown.AddOptions(name_list);
+        search_dropdown.AddOptions(name_list);
 
         auth.Load((loaded) =>
         {
@@ -30,7 +64,7 @@ public class SpaceDBTestScene : MonoBehaviour
                 {
                     if (error == AuthManager.SignInError.None)
                     {
-                        test();
+                        Debug.Log("생성 버튼을 클릭해서, 데이터를 추가해주세요.");
                     }
                     else
                     {
@@ -41,26 +75,27 @@ public class SpaceDBTestScene : MonoBehaviour
         });
     }
 
-    void test()
+    void test(Vector2d space_gps, string space_name)
     {
         NativeGallery.GetImageFromGallery((path) =>
         {
             if (path != null)
             {
                 Texture2D image = NativeGallery.LoadImageAtPath(path, markTextureNonReadable: false);
-                check(image);
+                check(image,space_gps,space_name);
             }
         });
     }
 
-    void check(Texture2D image)
+    void check(Texture2D image,Vector2d space_gps, string space_name)
     {
+
         db.AddSpace(new DBManager.ARSpaceData
         {
-            name = "test",
+            name = space_name,
             image = image,
-            x = 127.35,
-            y = 35.127,
+            x = space_gps.x,
+            y = space_gps.y,
             tilt = 1.1f,
             distance = 2.2f,
             compass = 3.3f,
@@ -70,12 +105,41 @@ public class SpaceDBTestScene : MonoBehaviour
             if (space == null)
             {
                 Debug.Log("Failed to add space");
+                Debug.Log(space_gps);
             }
             else
             {
                 Debug.Log(space);
             }
-            db.GetNearSpaces(127.35, 35.127, 500).ContinueWith((spaces) =>
+
+        });
+    }
+
+    public void create_button_clicked(){
+        string finding=create_dropdown.options[create_dropdown.value].text;
+        Debug.Log(finding);
+        Vector2d find_gps = new Vector2d(0,0);
+        foreach(space_data space_var in Arspace_list){
+            if(space_var.ArSpaceName==finding){
+                find_gps = space_var.ArSpaceGps; 
+            }
+        }
+
+        test(find_gps,finding);
+
+    }
+
+    public void search_button_clicked(){
+        string finding=search_dropdown.options[search_dropdown.value].text;
+        Debug.Log(finding);
+        search(finding);
+
+    }
+
+    void search(string searched_name){
+            
+            
+            db.GetNearSpaces(60.19202222,24.964615042211662, 1000).ContinueWith((spaces) =>
             {
                 if (spaces == null)
                 {
@@ -83,21 +147,30 @@ public class SpaceDBTestScene : MonoBehaviour
                 }
                 else
                 {
-                    spaces[0].GetImage().ContinueWith((img) =>
-                    {
-                        this.image.texture = img;
-                    });
                     Debug.Log(spaces.Length);
-                    Debug.Log(spaces[0].id);
-                    Debug.Log(spaces[0].name);
-                    Debug.Log(spaces[0].x);
-                    Debug.Log(spaces[0].y);
-                    Debug.Log(spaces[0].tilt);
-                    Debug.Log(spaces[0].distance);
-                    Debug.Log(spaces[0].compass);
-                    Debug.Log(spaces[0].radius);
+                    for(int index =0 ; index<spaces.Length ;index++){
+                        if(spaces[index].name==searched_name){
+                            spaces[index].GetImage().ContinueWith((img) =>
+                            {
+                                this.image.texture = img;
+                            });
+                            Debug.Log(spaces.Length);
+                            Debug.Log(spaces[index].id);
+                            Debug.Log(spaces[index].name);
+                            Debug.Log(spaces[index].x);
+                            Debug.Log(spaces[index].y);
+                            Debug.Log(spaces[index].tilt);
+                            Debug.Log(spaces[index].distance);
+                            Debug.Log(spaces[index].compass);
+                            Debug.Log(spaces[index].radius);
+                        }
+
+                    }
+
+
+
                 }
             });
-        });
     }
+
 }

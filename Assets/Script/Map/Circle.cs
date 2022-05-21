@@ -21,6 +21,8 @@ public class Circle : MonoBehaviour {
 
     public Vector2d Pos;
 
+    public string id;
+
     public string Space_title="";// space 생성시 addspace에서 자동으로 입력해줌.
 
     LineRenderer line;
