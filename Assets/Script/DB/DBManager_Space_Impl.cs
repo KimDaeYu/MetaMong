@@ -152,6 +152,7 @@ public partial class DBManager : MonoBehaviour
         var imageRef = await UploadImage(imageLocation, data.image);
         if (imageRef == null)
         {
+            Debug.Log("AddSpace: Failed to upload image");
             return null;
         }
 
@@ -160,6 +161,22 @@ public partial class DBManager : MonoBehaviour
 
         if (result == null || int.Parse(result) < 0)
         {
+            if (result == null)
+            {
+                Debug.Log("AddSpace: Network Error");
+            }
+            else if (result == "-1")
+            {
+                Debug.Log("AddSpace: Invalid Data");
+            }
+            else if (result == "-2")
+            {
+                Debug.Log("AddSpace: Space Conflicted");
+            }
+            else if (result == "-3")
+            {
+                Debug.Log("AddSpace: Server Error");
+            }
             try
             {
                 await imageRef.DeleteAsync();

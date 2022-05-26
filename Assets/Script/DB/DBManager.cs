@@ -13,7 +13,6 @@ public partial class DBManager : MonoBehaviour
 {
     public static DBManager Instance { get; private set; }
 
-    string serverAddr = "http://192.168.35.79:8080";
     string dbUrl = "https://metamong-c173d-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
     FirebaseApp app;
