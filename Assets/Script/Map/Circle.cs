@@ -6,6 +6,7 @@ using Mapbox.Unity.Map;
 using Mapbox.Unity.MeshGeneration.Factories;
 using Mapbox.Unity.Utilities;
 using TMPro;
+using static DBManager; 
 
 public class Circle : MonoBehaviour {
     /*
@@ -19,6 +20,11 @@ public class Circle : MonoBehaviour {
     public float xradius=50.0f;
     public float yradius;//현재 안쓰이는 것.
 
+
+    //DB 객체
+    ARSpace space_data; // 넘어온 db 객체를 받은것. 이걸 다시 불러서 이미지 등 사용.
+
+
     public Vector2d Pos;
 
     public string id;
@@ -28,19 +34,23 @@ public class Circle : MonoBehaviour {
     LineRenderer line;
 
     //자식들.
-    GameObject marker;
+    GameObject area;
+    GameObject marker; // 작은 빨간 마커 사용 예정.
     GameObject marker_title; // title 담기는 ui
     GameObject marker_text;
 
-    float _spawnScale = 15f;
+    float _spawnScale = 8f; // Mesh Renderer size
 
     float _spawnScale_text_zoomIn = 40f;
     float _spawnScale_text_zoomOut = 60f;
 
     private Vector2d unit_pos=new Vector2d(60.19191360d, 24.96843000d);// 유니티 좌표로 변환하기위한 데이터 상수.
     
+
+
     void Start () {
         line = gameObject.GetComponent<LineRenderer> ();
+        area = transform.Find("Area").gameObject;
         marker = transform.Find("Marker").gameObject;
         marker_text = transform.Find("CircleText").gameObject;
         marker_title = transform.Find("CircleText/Content").gameObject;
@@ -57,21 +67,36 @@ public class Circle : MonoBehaviour {
         CreatePoints();
         UpdateMarker();
 
-        gameObject.transform.position = GetGPSToWorld(_map, Pos) + new Vector3(0,5,0); // 5만큼 높이 올려서 생성.
+        gameObject.transform.position = GetGPSToWorld(_map, Pos) + new Vector3(0,1,0); // 5만큼 높이 올려서 생성.
+    }
+
+    public void Set_arspace_data(ARSpace in_space_data){
+        space_data = in_space_data;
     }
 
     void UpdateMarker(){
+        /*
+            1.Area component를 중앙으로 위치
+            2.Marker Component 중앙 위치. 
+            3.Circle Text의 확대 축소 조절.
+            
+        */
+        
         //마커 정보를 수정하거나 등, 내용 업데이트 된 것을 반영.
         if(marker_title==null)Debug.Log("오류");
 
         var unityMeter_Per1Meter = GetGPSToRadius(_map, unit_pos); //m당 현재 유니티화면에서 단위.
         
+
+
+        area.transform.localPosition = new Vector3(0f,0f,0f); // 매시 랜더러가 중앙에 오도록.
         marker.transform.localPosition = new Vector3(0f,0f,0f); //원의 중심에 위치하도록
-        marker.transform.localScale = new Vector3(_spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter);
+
+        area.transform.localScale = new Vector3(_spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter); //매시 랜더러 크기 조절.
         
         marker_title.GetComponent<TextMeshPro>().text = Space_title;
         
-        //텍스트창 크기 조절 
+        //텍스트창 위치 조절 
         float text_y = 30f;
         marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f); 
 

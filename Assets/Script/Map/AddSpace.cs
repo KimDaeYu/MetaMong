@@ -1,10 +1,10 @@
-	using UnityEngine;
-	using Mapbox.Utils;
-	using Mapbox.Unity.Map;
-	using Mapbox.Unity.MeshGeneration.Factories;
-	using Mapbox.Unity.Utilities;
-	using System.Collections.Generic;
-	using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Mapbox.Utils;
+using Mapbox.Unity.Map;
+using Mapbox.Unity.MeshGeneration.Factories;
+using Mapbox.Unity.Utilities;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 public class AddSpace : MonoBehaviour
 {    
@@ -54,17 +54,22 @@ public class AddSpace : MonoBehaviour
 			
 
 			Debug.Log("Load spaces");
-			db.GetNearSpaces(user_position.x, user_position.y,1000).ContinueWith((spaces) =>
+			Debug.Log(user_position.x); // 이렇게 하면 x: 위도
+			Debug.Log(user_position.y); // 이렇게 하면 y: 경도
+			// useposition은 x : 경도, y: 위도 잘 되있다.
+			db.GetNearSpaces(user_position.y, user_position.x,1000).ContinueWith((spaces) =>
             {
                 if (spaces == null)
                 {
-                    Debug.Log("Failed to get near spaces");
+                    Debug.Log("주변에 공간이 없습니다.");
                 }
                 else
                 {
 					Debug.Log("load finished");
-					//불러왔으면 먼저 삭제를 해줘야한다.
+
+					//불러왔으면 Set를 통해 겹치는 것 처리해줘야한다.
 					HashSet<string> new_ar_id_set = new HashSet<string>();
+					Debug.Log(spaces.Length);
 
 					for(int index = 0; index< spaces.Length; index++){
 						//Debug.Log("index: "+index);
@@ -76,41 +81,38 @@ public class AddSpace : MonoBehaviour
 						}
 
 						GameObject arInstance = Instantiate(ArSpace_prefab);
+
+						//여기서 이제 start 에서 수정하는것으로 변경 필요.
+						arInstance.GetComponent<Circle>().Set_arspace_data(spaces[index]);
+
 						arInstance.GetComponent<Circle>().id = spaces[index].id;// 굳이 스트링이어야 하나?
-						arInstance.GetComponent<Circle>().Pos= new Vector2d(spaces[index].x,spaces[index].y); // gps 삽입. 
-						arInstance.GetComponent<Circle>()._map=_map;
+						arInstance.GetComponent<Circle>().Pos= new Vector2d(spaces[index].y ,spaces[index].x); // gps 삽입.
+						//특이하게, 위도 경도 순으로 삽입해줘야 한다. 
 						arInstance.GetComponent<Circle>().Space_title = spaces[index].name; //  장소 명 삽입.
+						
+						arInstance.GetComponent<Circle>()._map=_map;
+
+
 						ArSpace_object_List.Add(arInstance);
 
 					}
 					
 
 					//갱신 안된 것 제거.
-					AR_CUR_ID_SET.ExceptWith(new_ar_id_set);
+
+					AR_CUR_ID_SET.IntersectWith(new_ar_id_set);
+
 					for (int i = ArSpace_object_List.Count - 1; i >= 0; i--)
 					{
-						Debug.Log("remove : "+ i.ToString());
-						if (AR_CUR_ID_SET.Contains(ArSpace_object_List[i].GetComponent<Circle>().id)){
+						if (!AR_CUR_ID_SET.Contains(ArSpace_object_List[i].GetComponent<Circle>().id)){
+							Debug.Log("remove : "+ i.ToString());
 							Destroy(ArSpace_object_List[i]);
 							ArSpace_object_List.RemoveAt(i);
 						}
-							
-						//현재 문제점. 제거해도 안에 있는 객체는 안없어진다!!!
-
-
 					}
 					
-
-
                 }
-            });
-
-
-
-
-	
-			
-
+            }).Forget();
 
 		}
 
@@ -191,8 +193,8 @@ public class AddSpace : MonoBehaviour
 			//
 
 			//프레임마다 유저 gps 값을 불러오고 들어왔는지 확인.
-			user_position.x=Location_provider.GetComponent<MetamongLogLocationProvider>().Get_userX();
-			user_position.y=Location_provider.GetComponent<MetamongLogLocationProvider>().Get_userY();
+			user_position.x=Location_provider.GetComponent<MetamongLogLocationProvider>().Get_userX();//경도
+			user_position.y=Location_provider.GetComponent<MetamongLogLocationProvider>().Get_userY();//위도
 			//Debug.Log(user_position);
 			
 
@@ -206,20 +208,20 @@ public class AddSpace : MonoBehaviour
 				_map.GetComponent<AbstractMap>().SetZoom(prezoom);
 				_map.GetComponent<AbstractMap>().UpdateMap();
 
-				//화살표 나타내기
+				//확대시 수행해야하는 작업.
+				//1. 화살표 나타내기 2. LineRenderer 나타내기. 3. 마커 표시하기.
 				if(!user_arrow.activeSelf){
 					user_arrow.SetActive(true);
 				}
 				
 
-			}else{
+			}else{	
 				prezoom  = Mathf.Lerp(prezoom, 16f, Time.deltaTime*2);
 				_map.GetComponent<AbstractMap>().SetZoom(prezoom);
 				_map.GetComponent<AbstractMap>().UpdateMap();
 				target_object=null;
 
 			}
-			//prezoom = targetzoom;
 			
 			user_in_flag=false;
 

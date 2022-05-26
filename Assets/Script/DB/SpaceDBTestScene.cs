@@ -112,7 +112,8 @@ public class SpaceDBTestScene : MonoBehaviour
                 Debug.Log(space);
             }
 
-        });
+        }).Forget();
+        
     }
 
     public void create_button_clicked(){
@@ -133,17 +134,17 @@ public class SpaceDBTestScene : MonoBehaviour
         string finding=search_dropdown.options[search_dropdown.value].text;
         Debug.Log(finding);
         search(finding);
-
     }
 
     void search(string searched_name){
             
-            
-            db.GetNearSpaces(60.19202222,24.964615042211662, 1000).ContinueWith((spaces) =>
+            //60.19202222,24.964615042211662
+            //126.656745, 37.451401 
+            db.GetNearSpaces(126.656745,37.451401, 1000).ContinueWith((spaces) =>
             {
                 if (spaces == null)
                 {
-                    Debug.Log("Failed to get near spaces");
+                    Debug.Log("주변에 공간이 없습니다.");
                 }
                 else
                 {
@@ -153,7 +154,7 @@ public class SpaceDBTestScene : MonoBehaviour
                             spaces[index].GetImage().ContinueWith((img) =>
                             {
                                 this.image.texture = img;
-                            });
+                            }).Forget();
                             Debug.Log(spaces.Length);
                             Debug.Log(spaces[index].id);
                             Debug.Log(spaces[index].name);
@@ -170,7 +171,7 @@ public class SpaceDBTestScene : MonoBehaviour
 
 
                 }
-            });
+            }).Forget();
     }
 
 }

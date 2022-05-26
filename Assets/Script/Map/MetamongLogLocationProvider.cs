@@ -78,8 +78,8 @@ public class MetamongLogLocationProvider : MonoBehaviour
 			/////////////// GUI logging //////////////////////
 			
 			//변수를 업데이트
-			user_x=location.LatitudeLongitude.x;
-			user_y=location.LatitudeLongitude.y;
+			user_x=location.LatitudeLongitude.x;//위도
+			user_y=location.LatitudeLongitude.y;//경도
 			//
 			
 			StringBuilder sb = new StringBuilder();
