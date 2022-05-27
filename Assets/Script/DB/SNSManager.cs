@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 public class SNSManager : MonoBehaviour
 {
     public GameObject ui;
-    public string spaceId;
+    public TMP_InputField connectID;
     public Button connectButton;
     public TMP_Text statusText;
 
@@ -17,7 +17,7 @@ public class SNSManager : MonoBehaviour
     public GameObject PImagePostTemplate;
     public Transform postParent;
 
-    public TMP_InputField postInput;
+    
     public Button addPostButton;
 
     AuthManager auth;
@@ -73,14 +73,14 @@ public class SNSManager : MonoBehaviour
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(spaceId))
+        if (string.IsNullOrWhiteSpace(connectID.text))
         {
             Debug.Log("spacetext is null or whitespace");
             return;
         }
 
         connectButton.interactable = false;
-        db.ConnectARSpaceNode(spaceId, PostAddedListener, (connected) => { 
+        db.ConnectARSpaceNode(connectID.text, PostAddedListener, (connected) => { 
             if (connected)
             {
                 statusText.text = "connected to " + db.currentSpaceId;
@@ -171,7 +171,7 @@ public class SNSManager : MonoBehaviour
         comment_count.text = String.Format("{0:000}", post.comments);
 
         //position update
-        postObj.transform.position = post.position;
+        postObj.transform.localPosition = post.position;
     }
 
     public int ClickedLike(string postid, bool like){

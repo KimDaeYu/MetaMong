@@ -14,7 +14,7 @@ public class NewStory : MonoBehaviour
 
     public List<Vector3> testset;
     public GameObject SNSManager;
-    
+    public float distance = 0.8f;
 
     public Vector3 targetPos = new Vector3(0,0,0); 
     public Sprite targetImage;
@@ -22,7 +22,7 @@ public class NewStory : MonoBehaviour
     public Texture2D targetTexture2D;
     public bool landscape = true;
     public void AddNewStoryText(Vector3 Pos){
-        SNSManager.GetComponent<SNSManager>().AddPost(Content.GetComponent<TMP_InputField>().text, Pos);
+        SNSManager.GetComponent<SNSManager>().AddPost(Content.GetComponent<TMP_InputField>().text, GameObject.Find("ARLocationRoot").transform.InverseTransformPoint(Pos));
     }
 
 
@@ -32,7 +32,7 @@ public class NewStory : MonoBehaviour
         var TmpPos = new Vector3(0,0,0);
         GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " target " + targetPos.ToString() + "\n";
         if(targetPos == new Vector3(0,0,0)){
-            TmpPos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 5f));
+            TmpPos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, distance));
         }else{
             TmpPos = targetPos;
             targetPos = new Vector3(0,0,0);
@@ -49,7 +49,7 @@ public class NewStory : MonoBehaviour
     }
 
     public void AddNewStoryImage(Vector3 Pos){
-        SNSManager.GetComponent<SNSManager>().AddPost(duplicateTexture(targetTexture2D), Pos);
+        SNSManager.GetComponent<SNSManager>().AddPost(duplicateTexture(targetTexture2D), GameObject.Find("ARLocationRoot").transform.InverseTransformPoint(Pos));
     }
     Texture2D duplicateTexture(Texture2D source)
     {
@@ -74,7 +74,7 @@ public class NewStory : MonoBehaviour
         var TmpPos = new Vector3(0,0,0);
         GameObject.Find("Log").GetComponent<TextMeshProUGUI>().text += System.DateTime.Now.ToString() + " target " + targetPos.ToString() + "\n";
         if(targetPos == new Vector3(0,0,0)){
-            TmpPos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 5f));
+            TmpPos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, distance));
         }else{
             TmpPos = targetPos;
             targetPos = new Vector3(0,0,0);

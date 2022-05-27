@@ -60,13 +60,13 @@ public class StoryTouchSize : MonoBehaviour
                     //GameObject.Find("StoryManager").GetComponent<NewStory>().targetPos = hit.collider.gameObject.transform.position;
                     target = hit.collider.gameObject.transform.parent.transform;
                     var feedback = hit.collider.gameObject.transform.parent.transform.GetChild(2).gameObject;
-                    if(target.localScale[0] > 0.9f){
+                    if(target.localScale[0] > 0.19f){
                         //small
-                        targetSize = new Vector3(0.3f,0.3f,0.3f);
+                        targetSize = new Vector3(0.07f,0.07f,0.07f);
                         feedback.SetActive(false);
                     }else{
                         //origin
-                        targetSize = new Vector3(1,1,1);
+                        targetSize = new Vector3(0.2f,0.2f,0.2f);
                         feedback.SetActive(true);
                     }
 

@@ -13,7 +13,7 @@ public class SignUpUI : MonoBehaviour
     public Button signUpButton;
     public Button cancelButton;
 
-    public GameObject entryUI;
+    public GameObject SignInUI;
     public GameObject profileUI;
 
     void Init()
@@ -22,7 +22,7 @@ public class SignUpUI : MonoBehaviour
         cancelButton.onClick.AddListener(Cancel);
     }
 
-    bool Validate()
+     bool Validate()
     {
         if (string.IsNullOrWhiteSpace(emailInput.text))
         {
@@ -69,6 +69,7 @@ public class SignUpUI : MonoBehaviour
     {
         if (error == AuthManager.SignUpError.None)
         {
+            //로그인 성공
             gameObject.SetActive(false);
             profileUI.SetActive(true);
         }
@@ -87,7 +88,7 @@ public class SignUpUI : MonoBehaviour
     void Cancel()
     {
         gameObject.SetActive(false);
-        entryUI.SetActive(true);
+        SignInUI.SetActive(true);
     }
 
     // Start is called before the first frame update

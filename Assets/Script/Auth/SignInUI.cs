@@ -10,6 +10,8 @@ public class SignInUI : MonoBehaviour
     public TMP_InputField passwordInput;
     public TMP_Text errorText;
     public Button signInButton;
+    public Button signUpButton;
+    public GameObject signUpUI;
     public Button cancelButton;
 
     public GameObject entryUI;
@@ -19,22 +21,29 @@ public class SignInUI : MonoBehaviour
     {
         signInButton.onClick.AddListener(SignIn);
         cancelButton.onClick.AddListener(Cancel);
+        signUpButton.onClick.AddListener(OnSignUpButtonClick);
     }
 
     bool Validate()
     {
         if (string.IsNullOrWhiteSpace(emailInput.text))
         {
-            errorText.text = "ÀÌ¸ŞÀÏÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä";
+            errorText.text = "ì´ë©”ì¼ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”";
             return false;
         }
         if (string.IsNullOrWhiteSpace(passwordInput.text))
         {
-            errorText.text = "ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä";
+            errorText.text = "ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”";
             return false;
         }
 
         return true;
+    }
+
+    void OnSignUpButtonClick()
+    {
+        gameObject.SetActive(false);
+        signUpUI.SetActive(true);
     }
 
     void SetInteractable(bool interactable)
@@ -65,10 +74,10 @@ public class SignInUI : MonoBehaviour
         {
             errorText.text = error switch
             {
-                AuthManager.SignInError.InvalidEmail => "ÀÌ¸ŞÀÏ Çü½ÄÀÌ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù",
-                AuthManager.SignInError.WrongPassword => "ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù",
-                AuthManager.SignInError.UserNotFound => "Á¸ÀçÇÏÁö ¾Ê´Â ÀÌ¸ŞÀÏ ÀÔ´Ï´Ù",
-                _ => "³×Æ®¿öÅ© ¿À·ù"
+                AuthManager.SignInError.InvalidEmail => "ì´ë©”ì¼ í˜•ì‹ì´ ì˜¬ë°”ë¥´ì§€ ì•ŠìŠµë‹ˆë‹¤",
+                AuthManager.SignInError.WrongPassword => "ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤",
+                AuthManager.SignInError.UserNotFound => "ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ì´ë©”ì¼ ì…ë‹ˆë‹¤",
+                _ => "ë„¤íŠ¸ì›Œí¬ ì˜¤ë¥˜"
             };
         }
         SetInteractable(true);
