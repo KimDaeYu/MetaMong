@@ -13070,7 +13070,7 @@ GameObject:
   - component: {fileID: 1450774683}
   - component: {fileID: 1450774687}
   m_Layer: 5
-  m_Name: Image
+  m_Name: AnchorImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13590,7 +13590,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh159652
+  m_Name: pb_Mesh53866
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2

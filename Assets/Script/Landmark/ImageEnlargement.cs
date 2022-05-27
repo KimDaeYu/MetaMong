@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ImageEnlargement : MonoBehaviour
 {   
@@ -9,7 +10,10 @@ public class ImageEnlargement : MonoBehaviour
     Vector3 position = Vector3.zero; 
     
     private void Start() {
-        GameObject.Find("AnchorImage").GetComponent<Image>().texture = GameObject.Find("PassData").GetComponent<SetData>().spaceData.image;
+        var content = GameObject.Find("PassData").GetComponent<SetData>().spaceData.image;
+        Rect rect = new Rect(0, 0, content.width, content.height);
+        Sprite img = Sprite.Create(content, rect, new Vector2(0.5f, 0.5f));
+        GameObject.Find("AnchorImage").GetComponent<Image>().sprite = img;
     }
     public void Click(){
         Debug.Log("Clicked!");
