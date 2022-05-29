@@ -1,3 +1,5 @@
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,21 +28,21 @@ public class SignUpUI : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(emailInput.text))
         {
-            errorText.text = "ÀÌ¸ÞÀÏÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä";
+            errorText.text = "ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½";
             return false;
         }
         if (string.IsNullOrWhiteSpace(passwordInput.text))
         {
-            errorText.text = "ºñ¹Ð¹øÈ£¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä";
+            errorText.text = "ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿? ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½";
         }
         if (passwordInput.text.Length < 6)
         {
-            errorText.text = "ºñ¹Ð¹øÈ£´Â 6ÀÚ¸® ÀÌ»óÀÌ¾î¾ß ÇÕ´Ï´Ù";
+            errorText.text = "ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿? 6ï¿½Ú¸ï¿½ ï¿½Ì»ï¿½ï¿½Ì¾ï¿½ï¿? ï¿½Õ´Ï´ï¿½";
             return false;
         }
         if (string.IsNullOrWhiteSpace(nameInput.text))
         {
-            errorText.text = "ÀÌ¸§À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä";
+            errorText.text = "ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½";
             return false;
         }
         
@@ -69,17 +71,19 @@ public class SignUpUI : MonoBehaviour
     {
         if (error == AuthManager.SignUpError.None)
         {
-            //·Î±×ÀÎ ¼º°ø
+            //ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             gameObject.SetActive(false);
-            profileUI.SetActive(true);
+            //profileUI.SetActive(true);
+            SignInUI.SetActive(true);
+            
         }
         else
         {
             errorText.text = error switch
             {
-                AuthManager.SignUpError.InvalidEmail => "ÀÌ¸ÞÀÏ Çü½ÄÀÌ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù",
-                AuthManager.SignUpError.EmailAlreadyInUse => "ÀÌ¹Ì »ç¿ëÁßÀÎ ÀÌ¸ÞÀÏ ÀÔ´Ï´Ù",
-                _ => "³×Æ®¿öÅ© ¿À·ù"
+                AuthManager.SignUpError.InvalidEmail => "ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¹Ù¸ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½",
+                AuthManager.SignUpError.EmailAlreadyInUse => "ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿? ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½Ô´Ï´ï¿½",
+                _ => "ï¿½ï¿½Æ®ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½"
             };
         }
         SetInteractable(true);

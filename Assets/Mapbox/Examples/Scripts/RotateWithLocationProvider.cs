@@ -43,7 +43,7 @@ namespace Mapbox.Examples
 
 		/// <summary>
 		/// Use a mock <see cref="T:Mapbox.Unity.Location.TransformLocationProvider"/>,
-		/// rather than a <see cref="T:Mapbox.Unity.Location.EditorLocationProvider"/>.   
+		/// rather than a <see cref="T:Mapbox.Uni_useTransformLocationProviderty.Location.EditorLocationProvider"/>.   
 		/// </summary>
 		[SerializeField]
 		bool _useTransformLocationProvider;

@@ -117,7 +117,7 @@ namespace Mapbox.Unity.Location
 #endif
 
 			_currentLocation.Provider = "unity";
-			_wait1sec = new WaitForSeconds(1f);
+			_wait1sec = new WaitForSeconds(0.3f);
 			_waitUpdateTime = _updateTimeInMilliSeconds < 500 ? new WaitForSeconds(0.5f) : new WaitForSeconds((float)_updateTimeInMilliSeconds / 1000.0f);
 
 			if (null == _userHeadingSmoothing) { _userHeadingSmoothing = transform.gameObject.AddComponent<AngleSmoothingNoOp>(); }

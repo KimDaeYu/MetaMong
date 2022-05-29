@@ -20,6 +20,11 @@ public class AddSpace : MonoBehaviour
 
 		AuthManager auth;
     	DBManager db;
+		
+
+		//업데이트하도록 유도하는 이벤트
+		public delegate void UpdateAction();
+		public static event UpdateAction OnUpdated;//
 
 
 		//  전송받은 데이터 담는 리스트들.
@@ -29,6 +34,7 @@ public class AddSpace : MonoBehaviour
 
 
 		//
+		public GameObject NoticePanel;
 
 		public GameObject ArSpace_prefab;//circle
 		private List<GameObject> ArSpace_object_List = new List<GameObject>();
@@ -40,6 +46,7 @@ public class AddSpace : MonoBehaviour
 		public GameObject Location_provider;
 
 		bool user_in_flag=false;//for문에서 한번이라도 ar space에 접근시 true.
+		bool iszoom = false;// 현재 zoom 상태인지.
 
 		private Vector2d user_position = new Vector2d();
 
@@ -48,12 +55,16 @@ public class AddSpace : MonoBehaviour
 
 		GameObject target_object=null;
 		public GameObject user_arrow;
+
+		public GameObject Change_Scene_button;
+
 	
 		void LoadSpace(){
 			//현재 위치 주변의 공간을 불러온다.
 			
 
 			Debug.Log("Load spaces");
+			Debug.Log("User position");
 			Debug.Log(user_position.x); // 이렇게 하면 x: 위도
 			Debug.Log(user_position.y); // 이렇게 하면 y: 경도
 			// useposition은 x : 경도, y: 위도 잘 되있다.
@@ -83,6 +94,7 @@ public class AddSpace : MonoBehaviour
 						GameObject arInstance = Instantiate(ArSpace_prefab);
 
 						//여기서 이제 start 에서 수정하는것으로 변경 필요.
+						Debug.Log(spaces[index].GetType().Name);
 						arInstance.GetComponent<Circle>().Set_arspace_data(spaces[index]);
 
 						arInstance.GetComponent<Circle>().id = spaces[index].id;// 굳이 스트링이어야 하나?
@@ -121,6 +133,7 @@ public class AddSpace : MonoBehaviour
 			//이 부분에 firebase 추가.
         auth = AuthManager.Instance;
         db = DBManager.Instance;
+		/*
         auth.Load((loaded) =>
         {
             if (!loaded)
@@ -145,6 +158,7 @@ public class AddSpace : MonoBehaviour
                 });
             }
         });
+		*/
 
 
 		
@@ -182,11 +196,22 @@ public class AddSpace : MonoBehaviour
 			return user_in_flag;
 		}
 
-		
+		public void SetChangeButton(bool change){
+
+			Change_Scene_button.SetActive(change);
+		}
+
+		void OnUpdateEvent(){
+			if(OnUpdated!=null){
+				OnUpdated();//이벤트를 발생시킨다.
+			}
+		}
 
 		
-		float targetzoom = 18f;
 		float prezoom = 16f;
+		
+
+		string now_space_id;
 		private void Update()
 		{
 			//업데이트에서 통신이 담겨야함.
@@ -205,30 +230,52 @@ public class AddSpace : MonoBehaviour
 
 			if(user_in_flag){
 				prezoom  = Mathf.Lerp(prezoom, 18f, Time.deltaTime*2);
+				
 				_map.GetComponent<AbstractMap>().SetZoom(prezoom);
 				_map.GetComponent<AbstractMap>().UpdateMap();
+				iszoom=true;
+				//OnUpdateEvent();
 
 				//확대시 수행해야하는 작업.
-				//1. 화살표 나타내기 2. LineRenderer 나타내기. 3. 마커 표시하기.
+				//1. 화살표 나타내기,텍스트 나타내기.
+				//2. circle들 업데이트
+				
 				if(!user_arrow.activeSelf){
 					user_arrow.SetActive(true);
 				}
 				
 
-			}else{	
+			}else{
+				if(NoticePanel.activeSelf)
+					NoticePanel.SetActive(false);
+				//OnUpdateEvent();
+				target_object=null;
+			}
+
+
+			if(!user_in_flag && iszoom){
+				//update 속도를 개선한것.
+				Debug.Log(prezoom);
+				
 				prezoom  = Mathf.Lerp(prezoom, 16f, Time.deltaTime*2);
 				_map.GetComponent<AbstractMap>().SetZoom(prezoom);
 				_map.GetComponent<AbstractMap>().UpdateMap();
-				target_object=null;
+				if(prezoom < 16.1f){
+					//이 부분은 lerp가 정확히 16으로 조절이 안되서 이용.
+					iszoom=false;
+					prezoom=16f;
+					_map.GetComponent<AbstractMap>().SetZoom(prezoom);
+					_map.GetComponent<AbstractMap>().UpdateMap();		
+				}
 
 			}
+
 			
 			user_in_flag=false;
-
 			//불러오고 나서 포함되는지 여부 확인
 			foreach(GameObject arspace in ArSpace_object_List ){
 				
-				var howfar =(Conversions.LatLonToMeters(user_position) - Conversions.LatLonToMeters(arspace.GetComponent<Circle>().Pos)).magnitude;	
+				var howfar = (Conversions.LatLonToMeters(user_position) - Conversions.LatLonToMeters(arspace.GetComponent<Circle>().Pos)).magnitude;	
 				if(howfar<50){
 					Debug.Log("in");
 					Debug.Log(howfar);
@@ -240,14 +287,27 @@ public class AddSpace : MonoBehaviour
 					//16 -> 18.1
 					user_in_flag=true;
 					target_object=arspace;
+					
+					//데이터를 로드해서, 실어둠.
+					if(now_space_id != arspace.GetComponent<Circle>().id){
+						target_object.GetComponent<Circle>().UpdateSpaceImg();
+						now_space_id=arspace.GetComponent<Circle>().id;
+					}
+					
 
-
-
-					//1. ar space 2m 반경이면
-					if(howfar<2){
+					//1. ar space 5m 반경이면
+					//2. 안내 메세지 없애고, 버튼 등장.
+					if(howfar<5){
 						Debug.Log("Deep in");
 						Debug.Log(howfar);
-
+						if(NoticePanel.activeSelf){
+							Debug.Log("notice remove");
+							NoticePanel.SetActive(false);
+						}
+						Change_Scene_button.SetActive(true);
+					}else{
+						NoticePanel.SetActive(true);
+						Change_Scene_button.SetActive(false);
 					}
 
 

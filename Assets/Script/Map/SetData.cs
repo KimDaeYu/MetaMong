@@ -18,6 +18,7 @@ public class SetData : MonoBehaviour
 
         //이미지가 다불러 와지면 이제 씬 변경
         SceneManager.LoadScene("Scenes/Anchor_sync_test");
+        Debug.Log(spaceData.id);
 
     }
 

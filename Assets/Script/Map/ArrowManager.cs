@@ -38,7 +38,7 @@ public class ArrowManager : MonoBehaviour
 
         Vector3 dir = target.transform.position - gameObject.transform.position;
         dir.y=0;
-        Debug.Log(dir);
+        //Debug.Log(dir);
         
         Quaternion rot=Quaternion.LookRotation(dir.normalized);
         gameObject.transform.rotation = rot;

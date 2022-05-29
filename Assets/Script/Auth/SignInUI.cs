@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SignInUI : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class SignInUI : MonoBehaviour
     void Init()
     {
         signInButton.onClick.AddListener(SignIn);
-        cancelButton.onClick.AddListener(Cancel);
+        //cancelButton.onClick.AddListener(Cancel);
         signUpButton.onClick.AddListener(OnSignUpButtonClick);
     }
 
@@ -51,7 +52,7 @@ public class SignInUI : MonoBehaviour
         emailInput.interactable = interactable;
         passwordInput.interactable = interactable;
         signInButton.interactable = interactable;
-        cancelButton.interactable = interactable;
+        //cancelButton.interactable = interactable;
     }
 
     void SignIn()
@@ -68,7 +69,12 @@ public class SignInUI : MonoBehaviour
         if (error == AuthManager.SignInError.None)
         {
             gameObject.SetActive(false);
-            profileUI.SetActive(true);
+            SceneManager.LoadScene("Scenes/Map/MapScene");
+            //로그인 시, 바로 이동하는 것으로.
+
+
+            //profileUI.SetActive(true);
+            //entryUI.SetActive(true);
         }
         else
         {

@@ -2801,14 +2801,14 @@ MonoBehaviour:
   create_button: {fileID: 1842331524}
   search_button: {fileID: 425858421}
   Arspace_list:
-  - ArSpaceName: space1
+  - ArSpaceName: inha 1 dom
     ArSpaceGps:
-      x: 37.451401
-      y: 60.1919136
-  - ArSpaceName: space2
+      x: 126.653848
+      y: 37.446937
+  - ArSpaceName: inha 1 dom -2
     ArSpaceGps:
-      x: 24.966613042211662
-      y: 60.19102138798248
+      x: 126.653117
+      y: 37.436454
   - ArSpaceName: space3
     ArSpaceGps:
       x: 24.974615042211664

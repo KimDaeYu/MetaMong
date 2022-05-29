@@ -140,7 +140,9 @@ public class SpaceDBTestScene : MonoBehaviour
             
             //60.19202222,24.964615042211662
             //126.656745, 37.451401 
-            db.GetNearSpaces(126.656745,37.451401, 1000).ContinueWith((spaces) =>
+            //(126.653848,37.446937) 기숙사
+
+            db.GetNearSpaces(126.654129,37.44646, 1000).ContinueWith((spaces) =>
             {
                 if (spaces == null)
                 {

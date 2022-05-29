@@ -1,11 +1,11 @@
 using UnityEngine;
-using System.Collections;
-
 using Mapbox.Utils;
 using Mapbox.Unity.Map;
 using Mapbox.Unity.MeshGeneration.Factories;
 using Mapbox.Unity.Utilities;
 using TMPro;
+
+using Cysharp.Threading.Tasks;
 using static DBManager; 
 
 public class Circle : MonoBehaviour {
@@ -39,9 +39,10 @@ public class Circle : MonoBehaviour {
     GameObject marker_title; // title 담기는 ui
     GameObject marker_text;
 
-    float _spawnScale = 8f; // Mesh Renderer size
+    float _spawnScale = 7f; // Mesh Renderer size
+    float circle_spawnScale = 1.3f; // 원의 사이즈를 조절.
 
-    float _spawnScale_text_zoomIn = 40f;
+    float _spawnScale_text_zoomIn = 20f;
     float _spawnScale_text_zoomOut = 60f;
 
     private Vector2d unit_pos=new Vector2d(60.19191360d, 24.96843000d);// 유니티 좌표로 변환하기위한 데이터 상수.
@@ -73,8 +74,19 @@ public class Circle : MonoBehaviour {
     public void Set_arspace_data(ARSpace in_space_data){
         space_data = in_space_data;
     }
+    
 
-    void UpdateMarker(){
+    public void UpdateSpaceImg(){
+        //공간 진입시, 이미지를 다운 받아서, don't destroy에 삽입.
+        //캐싱처리도 해야함.
+        GameObject.Find("PassData").GetComponent<SetData>().UpdateSpaceImg(space_data);
+
+    }
+    
+
+
+
+    public void UpdateMarker(){
         /*
             1.Area component를 중앙으로 위치
             2.Marker Component 중앙 위치. 
@@ -106,13 +118,28 @@ public class Circle : MonoBehaviour {
 
         if(iszoom){
             marker_text.transform.localScale = new Vector3(_spawnScale_text_zoomIn*unityMeter_Per1Meter, _spawnScale_text_zoomIn*unityMeter_Per1Meter, _spawnScale_text_zoomIn*unityMeter_Per1Meter);
+        	// 확대시 1.Mesh 안보이게 하기 2. LineRenderer 나타내기. 3. 마커 표시하기. 4. 씬 변환 버튼
+            //  5. text 높이 변경.
+			marker.SetActive(true);
+            area.SetActive(false);
+            line.enabled=true;
+            text_y = 60f;
+            marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f);
+            marker.transform.localPosition = new Vector3(0f,(text_y-30f)*unityMeter_Per1Meter,0f);
+
+
         }else{
             marker_text.transform.localScale = new Vector3(_spawnScale_text_zoomOut*unityMeter_Per1Meter, _spawnScale_text_zoomOut*unityMeter_Per1Meter, _spawnScale_text_zoomOut*unityMeter_Per1Meter);
+            marker.SetActive(false);
+            area.SetActive(true);
+            line.enabled=false;
+            marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f); 
+
         }
                 
     }
 
-    void CreatePoints () {
+    public void CreatePoints() {
         /*
             원 그려주는 함수.
             xradius를 통해 반지름 조절.
@@ -125,8 +152,8 @@ public class Circle : MonoBehaviour {
         float unityMeter_Per1Meter = GetGPSToRadius(_map, unit_pos); //m당 현재 유니티화면에서 단위.
 
         for(int i=0;i<(segments+1);i++) {
-            x = Mathf.Cos(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * 1.6f;// *1.8는 스케일이 반으로 출력되는 문제가 있어서. float 문제?
-            z = Mathf.Sin(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * 1.6f;
+            x = Mathf.Cos(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * circle_spawnScale;// *1.8는 스케일이 반으로 출력되는 문제가 있어서. float 문제?
+            z = Mathf.Sin(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * circle_spawnScale;
             
  
             line.SetPosition (i,new Vector3(x,y,z));
