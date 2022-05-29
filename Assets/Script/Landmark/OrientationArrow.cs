@@ -57,23 +57,23 @@ public class OrientationArrow : MonoBehaviour
         //Debug.Log(horizondiff.ToString()+ "//" +verticladiff.ToString());
         if(horizondiff < precision && verticladiff < precision){
             Arrow_cone.GetComponent<MeshRenderer>().materials[0].color = Color.green;
-
-            InfoText.GetComponent<TextMeshProUGUI>().text = "해당 부분을 클릭해 고정해주세요!";
-            gameObject.GetComponent<ARPointCheck>().enabled = true;
-            ViewAR.GetComponent<ToggleAR>().VisualizePoints(true);
-            ViewAR.GetComponent<Image>().color = new Color32(255,255,255,255);
-
-            //ViewAR.GetComponent<Toggle>().isOn = true;
-        
-            //SetCoordBtn.SetActive(true);
+            if (InfoText != null){
+                InfoText.GetComponent<TextMeshProUGUI>().text = "해당 부분을 클릭해 고정해주세요!";
+                gameObject.GetComponent<ARPointCheck>().enabled = true;
+                ViewAR.GetComponent<ToggleAR>().VisualizePoints(true);
+                ViewAR.GetComponent<Image>().color = new Color32(255,255,255,255);
+            }
         }else{
             Arrow_cone.GetComponent<MeshRenderer>().materials[0].color = Color.red;
             
-            InfoText.GetComponent<TextMeshProUGUI>().text = "해당위치를 찾아주세요!";
-            gameObject.GetComponent<ARPointCheck>().enabled = false;
-            gameObject.GetComponent<ARPointCheck>().SetCoordBtn.SetActive(false);
-            ViewAR.GetComponent<ToggleAR>().VisualizePoints(false);
-            ViewAR.GetComponent<Image>().color = new Color32(255,255,255,100);
+            if (InfoText != null){
+                InfoText.GetComponent<TextMeshProUGUI>().text = "해당위치를 찾아주세요!";
+                gameObject.GetComponent<ARPointCheck>().enabled = false;
+                gameObject.GetComponent<ARPointCheck>().SetCoordBtn.SetActive(false);
+                ViewAR.GetComponent<ToggleAR>().VisualizePoints(false);
+                ViewAR.GetComponent<Image>().color = new Color32(255,255,255,100);
+            }
+
             //ViewAR.GetComponent<Toggle>().isOn = false;
             ARreset();
         }
