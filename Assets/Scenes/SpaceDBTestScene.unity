@@ -2805,10 +2805,10 @@ MonoBehaviour:
     ArSpaceGps:
       x: 126.653848
       y: 37.446937
-  - ArSpaceName: inha 1 dom -2
+  - ArSpaceName: 1234
     ArSpaceGps:
-      x: 126.653117
-      y: 37.436454
+      x: 22
+      y: 22
   - ArSpaceName: space3
     ArSpaceGps:
       x: 24.974615042211664

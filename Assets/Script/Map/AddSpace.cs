@@ -1,10 +1,10 @@
 using UnityEngine;
 using Mapbox.Utils;
 using Mapbox.Unity.Map;
-using Mapbox.Unity.MeshGeneration.Factories;
 using Mapbox.Unity.Utilities;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class AddSpace : MonoBehaviour
 {    
@@ -20,11 +20,6 @@ public class AddSpace : MonoBehaviour
 
 		AuthManager auth;
     	DBManager db;
-		
-
-		//업데이트하도록 유도하는 이벤트
-		public delegate void UpdateAction();
-		public static event UpdateAction OnUpdated;//
 
 
 		//  전송받은 데이터 담는 리스트들.
@@ -57,6 +52,8 @@ public class AddSpace : MonoBehaviour
 		public GameObject user_arrow;
 
 		public GameObject Change_Scene_button;
+
+		public GameObject Add_space_scene_button;
 
 	
 		void LoadSpace(){
@@ -165,9 +162,7 @@ public class AddSpace : MonoBehaviour
 		user_position.x=Location_provider.GetComponent<MetamongLogLocationProvider>().Get_userX();
 		user_position.y=Location_provider.GetComponent<MetamongLogLocationProvider>().Get_userY();
 		InvokeRepeating("LoadSpace", 1f, 10f);
-			
-
-
+		
 		}
 
         public static float GetOneMapMeterInUnityMeters(AbstractMap map, Vector3 targetPlayerPos)
@@ -201,10 +196,8 @@ public class AddSpace : MonoBehaviour
 			Change_Scene_button.SetActive(change);
 		}
 
-		void OnUpdateEvent(){
-			if(OnUpdated!=null){
-				OnUpdated();//이벤트를 발생시킨다.
-			}
+		public void Change_Scene_to_make(){
+			SceneManager.LoadScene("Scenes/Main/MakeSpace");
 		}
 
 		
@@ -243,11 +236,18 @@ public class AddSpace : MonoBehaviour
 				if(!user_arrow.activeSelf){
 					user_arrow.SetActive(true);
 				}
+				if(Add_space_scene_button.activeSelf){//make scene 으로 이동하는 버튼.
+					Add_space_scene_button.SetActive(false);
+				}
 				
 
 			}else{
 				if(NoticePanel.activeSelf)
 					NoticePanel.SetActive(false);
+				
+				if(!Add_space_scene_button.activeSelf){//make scene 으로 이동하는 버튼.
+					Add_space_scene_button.SetActive(true);
+				}				
 				//OnUpdateEvent();
 				target_object=null;
 			}
@@ -297,7 +297,7 @@ public class AddSpace : MonoBehaviour
 
 					//1. ar space 5m 반경이면
 					//2. 안내 메세지 없애고, 버튼 등장.
-					if(howfar<5){
+					if(howfar<20){
 						Debug.Log("Deep in");
 						Debug.Log(howfar);
 						if(NoticePanel.activeSelf){

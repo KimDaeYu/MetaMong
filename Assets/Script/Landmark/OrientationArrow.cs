@@ -25,13 +25,14 @@ public class OrientationArrow : MonoBehaviour
         isMainCameraNull = mainCamera == null;
 
         _gps = GPSManager.Instance;
-
-        ARSpace data = GameObject.Find("PassData").GetComponent<SetData>().spaceData;         
-        Target = new Vector3(data.compass,data.tilt,data.distance);
-        Texture2D img = data.image;
-        Sprite tempSprite = Sprite.Create(img,new Rect(0,0,img.width,img.height),new Vector2(0,0));
-        AnchorImage.GetComponent<Image>().sprite = tempSprite;
-
+    
+        if(GameObject.Find("PassData")!=null){
+            ARSpace data = GameObject.Find("PassData").GetComponent<SetData>().spaceData;         
+            Target = new Vector3(data.compass,data.tilt,data.distance);
+            Texture2D img = data.image;
+            Sprite tempSprite = Sprite.Create(img,new Rect(0,0,img.width,img.height),new Vector2(0,0));
+            AnchorImage.GetComponent<Image>().sprite = tempSprite;
+        }
     }
 
     // Update is called once per frame

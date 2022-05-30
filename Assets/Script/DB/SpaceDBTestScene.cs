@@ -37,6 +37,7 @@ public class SpaceDBTestScene : MonoBehaviour
        
     void Start()
     {
+        
         auth = AuthManager.Instance;
         db = DBManager.Instance;
         create_dropdown.ClearOptions();
@@ -83,6 +84,7 @@ public class SpaceDBTestScene : MonoBehaviour
             {
                 Texture2D image = NativeGallery.LoadImageAtPath(path, markTextureNonReadable: false);
                 check(image,space_gps,space_name);
+
             }
         });
     }

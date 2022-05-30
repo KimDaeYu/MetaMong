@@ -430,7 +430,7 @@ Transform:
   m_GameObject: {fileID: 1292942950144724686}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.000000083575, y: 0, z: 0.0000019421}
-  m_LocalScale: {x: 18.149733, y: 1.4556993, z: 18.149733}
+  m_LocalScale: {x: 18.149733, y: 2, z: 18.149733}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8975709127299631580}
@@ -464,7 +464,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3daf8139260c6da418828d9bfe54ebcf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -600,7 +600,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: space1
+  m_text: "\uC778\uD558\uB300\uD559\uAD50 \uB3C4\uC11C\uAD00"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 769bb634886e7d945bf790d133983625, type: 2}
   m_sharedMaterial: {fileID: 2885330251220182512, guid: 769bb634886e7d945bf790d133983625,
@@ -628,12 +628,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 4
+  m_fontSize: 2.75
   m_fontSizeBase: 4
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 1
+  m_fontSizeMax: 4
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -656,7 +656,7 @@ MonoBehaviour:
   m_parseCtrlCharacters: 1
   m_isOrthographic: 0
   m_isCullingEnabled: 0
-  m_horizontalMapping: 0
+  m_horizontalMapping: 1
   m_verticalMapping: 0
   m_uvLineOffset: 0
   m_geometrySortingOrder: 0

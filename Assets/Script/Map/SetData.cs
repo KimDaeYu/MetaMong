@@ -17,7 +17,9 @@ public class SetData : MonoBehaviour
     public void ChangeScene(){
 
         //이미지가 다불러 와지면 이제 씬 변경
-        SceneManager.LoadScene("Scenes/Anchor_sync_test");
+        DontDestroyOnLoad(gameObject);
+        SceneManager.LoadScene("Scenes/Main/Main");
+        Debug.Log("Space id : ");
         Debug.Log(spaceData.id);
 
     }
@@ -40,9 +42,6 @@ public class SetData : MonoBehaviour
         
     }
 
-    private void Awake(){
-        DontDestroyOnLoad(gameObject);
-    }
 
     // Update is called once per frame
     void Update()

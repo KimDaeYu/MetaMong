@@ -10,14 +10,9 @@ public class ImageEnlargement : MonoBehaviour
     Vector3 position = Vector3.zero; 
     
     private void Start() {
-        Scene scene = SceneManager.GetActiveScene();
-        if(scene.name == "Main"){
-            var content = GameObject.Find("PassData").GetComponent<SetData>().spaceData.image;
-            Rect rect = new Rect(0, 0, content.width, content.height);
-            Sprite img = Sprite.Create(content, rect, new Vector2(0.5f, 0.5f));
-            GameObject.Find("AnchorImage").GetComponent<Image>().sprite = img;
-        }
+        
     }
+
     public void Click(){
         Debug.Log("Clicked!");
         if (scale == TargetScale){

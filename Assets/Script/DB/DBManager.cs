@@ -94,7 +94,7 @@ public partial class DBManager : MonoBehaviour
 
     async UniTask<StorageReference> UploadImage(string location, Texture2D image)
     {
-        // ReadableÇÑ image¸¸ ÁÖ¾îÁø´Ù°í °¡Á¤ÇÏ°í Ã¼Å© »ý·«
+        // Readableï¿½ï¿½ imageï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ Ã¼Å© ï¿½ï¿½ï¿½ï¿½
 
         var newRef = storage.GetReference(location);
         try

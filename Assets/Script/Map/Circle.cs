@@ -79,7 +79,7 @@ public class Circle : MonoBehaviour {
     public void UpdateSpaceImg(){
         //공간 진입시, 이미지를 다운 받아서, don't destroy에 삽입.
         //캐싱처리도 해야함.
-        GameObject.Find("PassData").GetComponent<SetData>().UpdateSpaceImg(space_data);
+        GameObject.Find("PassData").GetComponent<SetData>().UpdateSpaceImg(space_data); 
 
     }
     
