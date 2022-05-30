@@ -29,42 +29,13 @@ public class SNSManager : MonoBehaviour
 
     void Start()
     {
-        //ui.SetActive(false);
-
-        connectButton.onClick.AddListener(ConnectSpace);
-        //addPostButton.onClick.AddListener(AddPost);
-
-        auth = AuthManager.Instance;
         db = DBManager.Instance;
-
-        auth.Load((loaded) =>
-        {
-            if (!loaded)
-            {
-                Debug.Log("Failed to load auth manager");
-            }
-            else
-            {
-                string email = "user1@test.com";
-                string password = "121212";
-                auth.SignIn(email, password, (error) =>
-                {
-                    if (error == AuthManager.SignInError.None)
-                    {
-                        //ui.SetActive(true);
-                        Debug.Log("Connect Success");
-                    }
-                    else
-                    {
-                        Debug.Log(error);
-                    }
-                });
-            }
-        });
+        ConnectSpace();
     }
 
     void ConnectSpace()
     {
+        String spaceid = GameObject.Find("PassData").GetComponent<SetData>().spaceData.id;
         if (db.currentSpaceId != null)
         {
             db.DisconnectARSpaceNode();
@@ -73,23 +44,22 @@ public class SNSManager : MonoBehaviour
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(connectID.text))
+        if (string.IsNullOrWhiteSpace(spaceid))
         {
             Debug.Log("spacetext is null or whitespace");
             return;
         }
 
-        connectButton.interactable = false;
-        db.ConnectARSpaceNode(connectID.text, PostAddedListener, (connected) => { 
+        db.ConnectARSpaceNode(spaceid, PostAddedListener, (connected) => { 
             if (connected)
             {
+                Debug.Log("Connect Success " + db.currentSpaceId);
                 statusText.text = "connected to " + db.currentSpaceId;
             }
             else
             {
                 Debug.Log("connection failed");
             }
-            connectButton.interactable = true;
         });
     }
 

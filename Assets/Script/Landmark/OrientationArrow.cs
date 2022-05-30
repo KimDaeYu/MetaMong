@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using ARLocation;
+using static DBManager;
 public class OrientationArrow : MonoBehaviour
 {
     public GameObject Arrow_cone;
@@ -17,11 +18,19 @@ public class OrientationArrow : MonoBehaviour
     public int precision = 10;
     public Vector3 Target; //compass, updown, distance
     // Use this for initialization
+
+    public GameObject AnchorImage;
     void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         isMainCameraNull = mainCamera == null;
         locationProvider = ARLocationProvider.Instance;
+
+        ARSpace data = GameObject.Find("PassData").GetComponent<SetData>().spaceData;         
+        Target = new Vector3(data.compass,data.tilt,data.distance);
+        Texture2D img = data.image;
+        Sprite tempSprite = Sprite.Create(img,new Rect(0,0,img.width,img.height),new Vector2(0,0));
+        AnchorImage.GetComponent<Image>().sprite = tempSprite;
         
     }
 

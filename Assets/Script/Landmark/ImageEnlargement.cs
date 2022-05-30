@@ -17,7 +17,6 @@ public class ImageEnlargement : MonoBehaviour
             Sprite img = Sprite.Create(content, rect, new Vector2(0.5f, 0.5f));
             GameObject.Find("AnchorImage").GetComponent<Image>().sprite = img;
         }
-
     }
     public void Click(){
         Debug.Log("Clicked!");
