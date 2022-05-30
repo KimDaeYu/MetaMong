@@ -37,17 +37,19 @@ public class SpaceNamePanel : MonoBehaviour
 
     public void check()
     {
-        Texture2D image = Image.GetComponent<SetAnchorImage>()._screenShot;
+        Texture2D image = (Texture2D)Image.GetComponent<SetAnchorImage>()._screenShot;
         
+        //Texture2D image = Image.GetComponent<Image>().texture;
+
         db.AddSpace(new DBManager.ARSpaceData
         {
             name = Content.GetComponent<TMP_InputField>().text,
             image = image,
-            x = 88f,//_gps.current_Lat,
-            y = 88f,//_gps.current_Long,
-            tilt = 88f,//_space.tilt,
-            distance = 88f,//_space.distance,
-            compass = 88f,//_space.compass,
+            x = _gps.current_Lat,
+            y = _gps.current_Long,
+            tilt = _space.tilt,
+            distance = _space.distance,
+            compass = _space.compass,
             radius = 50,
         }).ContinueWith((space) =>
         {
