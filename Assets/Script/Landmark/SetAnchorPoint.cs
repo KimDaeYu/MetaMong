@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using TMPro;
-using ARLocation;
+
 
 public class SetAnchorPoint : MonoBehaviour
 {
     public ARRaycastManager arRaycaster;
     public GameObject Origin;
     public GameObject line;
+    GPSManager _gps;
 
-    private ARLocation.ARLocationProvider locationProvider;
+    //private ARLocation.ARLocationProvider locationProvider;
 
     // Start is called before the first frame update
     void Start()
     {
-        locationProvider = ARLocationProvider.Instance;
+        _gps = GPSManager.Instance;
     }
 
     // Update is called once per frame
@@ -46,7 +47,7 @@ public class SetAnchorPoint : MonoBehaviour
                 measured_dis = Vector3.Distance(hitPose.position, Camera.main.transform.position);
                 
                 var space = GameObject.Find("Space").GetComponent<SpaceInstance>();
-                space.compass = (float)locationProvider.CurrentHeading.heading;
+                space.compass = (float)_gps.trueHeading;
                 space.tilt = (float)Camera.main.transform.localEulerAngles.x * -1;
                 space.distance = measured_dis;
 

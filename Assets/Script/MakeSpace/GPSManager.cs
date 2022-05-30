@@ -7,7 +7,10 @@ public class GPSManager : MonoBehaviour {
     public double first_Long; //최초 경도
     public double current_Lat; //현재 위도
     public double current_Long; //현재 경도
- 
+    
+    public  float magneticHeading;
+    public float trueHeading;
+
     private static WaitForSeconds second;
  
     private static bool gpsStarted = false;
@@ -16,6 +19,7 @@ public class GPSManager : MonoBehaviour {
  
     private void Awake () {
         second = new WaitForSeconds (1.0f);
+        
     }
  
     IEnumerator Start () {
@@ -27,6 +31,7 @@ public class GPSManager : MonoBehaviour {
  
         //GPS 서비스 시작
         Input.location.Start ();
+        Input.compass.enabled = true; //나침반 활성화
         Debug.Log ("Awaiting initialization");
  
         //활성화될 때 까지 대기
@@ -59,6 +64,11 @@ public class GPSManager : MonoBehaviour {
                 location = Input.location.lastData;
                 current_Lat = location.latitude * 1.0d;
                 current_Long = location.longitude * 1.0d;
+
+                if (Input.compass.headingAccuracy == 0 || Input.compass.headingAccuracy > 0) {
+                    magneticHeading = Input.compass.magneticHeading;
+                    trueHeading = Input.compass.trueHeading;
+                }
                 yield return second;
             }
         }

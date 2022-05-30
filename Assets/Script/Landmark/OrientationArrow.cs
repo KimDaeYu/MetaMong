@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using ARLocation;
 using static DBManager;
 public class OrientationArrow : MonoBehaviour
 {
@@ -9,7 +8,6 @@ public class OrientationArrow : MonoBehaviour
     public GameObject InfoText;
     public GameObject ViewAR;
 
-    private ARLocation.ARLocationProvider locationProvider;
     private GameObject mainCamera;
     
 
@@ -20,18 +18,20 @@ public class OrientationArrow : MonoBehaviour
     // Use this for initialization
 
     public GameObject AnchorImage;
+    GPSManager _gps;
     void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         isMainCameraNull = mainCamera == null;
-        locationProvider = ARLocationProvider.Instance;
+
+        _gps = GPSManager.Instance;
 
         ARSpace data = GameObject.Find("PassData").GetComponent<SetData>().spaceData;         
         Target = new Vector3(data.compass,data.tilt,data.distance);
         Texture2D img = data.image;
         Sprite tempSprite = Sprite.Create(img,new Rect(0,0,img.width,img.height),new Vector2(0,0));
         AnchorImage.GetComponent<Image>().sprite = tempSprite;
-        
+
     }
 
     // Update is called once per frame
@@ -42,10 +42,8 @@ public class OrientationArrow : MonoBehaviour
             return;
         }
 
-        var currentHeading = locationProvider.CurrentHeading.heading;
-        var currentMagneticHeading = locationProvider.CurrentHeading.magneticHeading;
-        var currentAccuracy = locationProvider.Provider.CurrentHeading.accuracy;
-        
+        var currentHeading = (float)_gps.trueHeading;
+
         //Arrow.transform.localRotation = Quaternion.Euler(ArrowVec);
         Arrow_cone.transform.localRotation = Quaternion.Euler(-(float)currentHeading + Target.x, 0, -(float)mainCamera.transform.localEulerAngles.x - Target.y);
         
