@@ -69,7 +69,7 @@ public class SignInUI : MonoBehaviour
         if (error == AuthManager.SignInError.None)
         {
             gameObject.SetActive(false);
-            SceneManager.LoadScene("Scenes/Map/MapScene");
+            SceneManager.LoadScene("Scenes/Main/MapScene");
             //로그인 시, 바로 이동하는 것으로.
 
 
