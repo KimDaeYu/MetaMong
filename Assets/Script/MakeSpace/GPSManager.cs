@@ -18,6 +18,15 @@ public class GPSManager : MonoBehaviour {
     private static LocationInfo location;
  
     private void Awake () {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
         second = new WaitForSeconds (1.0f);
         
     }
