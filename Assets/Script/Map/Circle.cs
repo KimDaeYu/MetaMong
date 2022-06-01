@@ -45,6 +45,7 @@ public class Circle : MonoBehaviour {
     float _spawnScale_text_zoomIn = 20f;
     float _spawnScale_text_zoomOut = 60f;
 
+    float _spawnScale_marker_zoomIn = 400f;
     private Vector2d unit_pos=new Vector2d(60.19191360d, 24.96843000d);// 유니티 좌표로 변환하기위한 데이터 상수.
     
 
@@ -65,7 +66,7 @@ public class Circle : MonoBehaviour {
     
     void Update(){
         
-        CreatePoints();
+        //CreatePoints();
         UpdateMarker();
 
         gameObject.transform.position = GetGPSToWorld(_map, Pos) + new Vector3(0,1,0); // 5만큼 높이 올려서 생성.
@@ -85,7 +86,8 @@ public class Circle : MonoBehaviour {
     
 
 
-
+    float marker_prezoom=100f;
+    float text_prezoom=10f;
     public void UpdateMarker(){
         /*
             1.Area component를 중앙으로 위치
@@ -102,7 +104,7 @@ public class Circle : MonoBehaviour {
 
 
         area.transform.localPosition = new Vector3(0f,0f,0f); // 매시 랜더러가 중앙에 오도록.
-        marker.transform.localPosition = new Vector3(0f,0f,0f); //원의 중심에 위치하도록
+        //marker.transform.localPosition = new Vector3(0f,0f,0f); //원의 중심에 위치하도록
 
         area.transform.localScale = new Vector3(_spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter, _spawnScale*unityMeter_Per1Meter); //매시 랜더러 크기 조절.
         
@@ -110,34 +112,57 @@ public class Circle : MonoBehaviour {
         
         //텍스트창 위치 조절 
         float text_y = 30f;
-        marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f); 
+        //marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f); 
 
 
         //줌인이냐 줌아웃이냐에 따라 TEXT 크기를 달리 설정.
         bool iszoom = GameObject.Find("ArSpaceManager").GetComponent<AddSpace>().is_zoom(); 
 
         if(iszoom){
-            marker_text.transform.localScale = new Vector3(_spawnScale_text_zoomIn*unityMeter_Per1Meter, _spawnScale_text_zoomIn*unityMeter_Per1Meter, _spawnScale_text_zoomIn*unityMeter_Per1Meter);
+            Debug.Log("확대");
+
+            marker_prezoom  = Mathf.Lerp(marker_prezoom, 200f, Time.deltaTime*2);
+            marker.transform.localScale = Vector3.one * marker_prezoom;
+
         	// 확대시 1.Mesh 안보이게 하기 2. LineRenderer 나타내기. 3. 마커 표시하기. 4. 씬 변환 버튼
             //  5. text 높이 변경.
-			marker.SetActive(true);
+            marker.SetActive(true);
+            text_y = 60f;
+            Debug.Log("스케일");
+            Debug.Log(unityMeter_Per1Meter);
+
+            text_prezoom  = Mathf.Lerp(text_prezoom, 14f, Time.deltaTime*2);
+            marker_text.transform.localScale = Vector3.one * text_prezoom;
+
+            marker_text.transform.localPosition = new Vector3(0f,25f,0f);
+            //marker.transform.localPosition = new Vector3(0f,(text_y-30f)*30,0f);
+            
             area.SetActive(false);
             line.enabled=true;
-            text_y = 60f;
-            marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f);
-            marker.transform.localPosition = new Vector3(0f,(text_y-30f)*unityMeter_Per1Meter,0f);
+
+        
 
 
         }else{
-            marker_text.transform.localScale = new Vector3(_spawnScale_text_zoomOut*unityMeter_Per1Meter, _spawnScale_text_zoomOut*unityMeter_Per1Meter, _spawnScale_text_zoomOut*unityMeter_Per1Meter);
+            Debug.Log("축소.");
+            //marker.transform.localScale = new Vector3(_spawnScale_marker_zoomOut*unityMeter_Per1Meter, _spawnScale_marker_zoomOut*unityMeter_Per1Meter, _spawnScale_marker_zoomIn*unityMeter_Per1Meter);
+            //prezz=0.16f;
+            marker_prezoom=10f;
+            text_prezoom  = Mathf.Lerp(text_prezoom, 10f, Time.deltaTime*2);
+            marker_text.transform.localScale = Vector3.one * text_prezoom;
+            marker_text.transform.localPosition = new Vector3(0f,5f,0f);
             marker.SetActive(false);
             area.SetActive(true);
             line.enabled=false;
-            marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f); 
+            
+            //marker_text.transform.localPosition = new Vector3(0f,text_y*unityMeter_Per1Meter,0f); 
 
         }
                 
     }
+
+
+    
 
     public void CreatePoints() {
         /*
@@ -151,7 +176,8 @@ public class Circle : MonoBehaviour {
         float angle = 20f;
         float unityMeter_Per1Meter = GetGPSToRadius(_map, unit_pos); //m당 현재 유니티화면에서 단위.
 
-        for(int i=0;i<(segments+1);i++) {
+        for(int i=0;i<(segments+1);i++) 
+        {
             x = Mathf.Cos(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * circle_spawnScale;// *1.8는 스케일이 반으로 출력되는 문제가 있어서. float 문제?
             z = Mathf.Sin(Mathf.Deg2Rad*angle) * xradius * unityMeter_Per1Meter * circle_spawnScale;
             
@@ -182,3 +208,5 @@ public class Circle : MonoBehaviour {
     }
 
 }
+
+

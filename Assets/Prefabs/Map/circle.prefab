@@ -181,7 +181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _map: {fileID: 0}
   segments: 100
-  xradius: 50
+  xradius: 190
   yradius: 5
   Pos:
     x: 60.19202222
