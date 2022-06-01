@@ -1,5 +1,3 @@
-
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,21 +26,21 @@ public class SignUpUI : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(emailInput.text))
         {
-            errorText.text = "�̸����� �Է��� �ּ���";
+            errorText.text = "이메일을 입력해 주세요";
             return false;
         }
         if (string.IsNullOrWhiteSpace(passwordInput.text))
         {
-            errorText.text = "��й�ȣ��? �Է��� �ּ���";
+            errorText.text = "비밀번호를 입력해 주세요";
         }
         if (passwordInput.text.Length < 6)
         {
-            errorText.text = "��й�ȣ��? 6�ڸ� �̻��̾��? �մϴ�";
+            errorText.text = "비밀번호는 6자리 이상이어야 합니다";
             return false;
         }
         if (string.IsNullOrWhiteSpace(nameInput.text))
         {
-            errorText.text = "�̸��� �Է��� �ּ���";
+            errorText.text = "이름을 입력해 주세요";
             return false;
         }
         
@@ -71,19 +69,17 @@ public class SignUpUI : MonoBehaviour
     {
         if (error == AuthManager.SignUpError.None)
         {
-            //�α��� ����
+            //로그인 성공
             gameObject.SetActive(false);
-            //profileUI.SetActive(true);
-            SignInUI.SetActive(true);
-            
+            profileUI.SetActive(true);
         }
         else
         {
             errorText.text = error switch
             {
-                AuthManager.SignUpError.InvalidEmail => "�̸��� ������ �ùٸ��� �ʽ��ϴ�",
-                AuthManager.SignUpError.EmailAlreadyInUse => "�̹� �������? �̸��� �Դϴ�",
-                _ => "��Ʈ��ũ ����"
+                AuthManager.SignUpError.InvalidEmail => "이메일 형식이 올바르지 않습니다",
+                AuthManager.SignUpError.EmailAlreadyInUse => "이미 사용중인 이메일 입니다",
+                _ => "네트워크 오류"
             };
         }
         SetInteractable(true);
