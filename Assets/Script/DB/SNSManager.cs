@@ -33,6 +33,13 @@ public class SNSManager : MonoBehaviour
         ConnectSpace();
     }
 
+    
+    private void OnDestroy() {
+        db.DisconnectARSpaceNode();
+        Debug.Log("db space disconnected!!");    
+    }
+
+
     void ConnectSpace()
     {
         String spaceid = GameObject.Find("PassData").GetComponent<SetData>().spaceData.id;

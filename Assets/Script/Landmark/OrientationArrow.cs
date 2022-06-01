@@ -68,7 +68,7 @@ public class OrientationArrow : MonoBehaviour
             if (InfoText != null){
                 InfoText.GetComponent<TextMeshProUGUI>().text = "해당 부분을 클릭해 고정해주세요!";
                 gameObject.GetComponent<ARPointCheck>().enabled = true;
-                ViewAR.GetComponent<ToggleAR>().VisualizePoints(true);
+                ViewAR.GetComponent<TogglePointAR>().VisualizePoints(true);
                 ViewAR.GetComponent<Image>().color = new Color32(255,255,255,255);
             }
         }else{
@@ -78,7 +78,7 @@ public class OrientationArrow : MonoBehaviour
                 InfoText.GetComponent<TextMeshProUGUI>().text = "해당위치를 찾아주세요!";
                 gameObject.GetComponent<ARPointCheck>().enabled = false;
                 gameObject.GetComponent<ARPointCheck>().SetCoordBtn.SetActive(false);
-                ViewAR.GetComponent<ToggleAR>().VisualizePoints(false);
+                ViewAR.GetComponent<TogglePointAR>().VisualizePoints(false);
                 ViewAR.GetComponent<Image>().color = new Color32(255,255,255,100);
             }
 
