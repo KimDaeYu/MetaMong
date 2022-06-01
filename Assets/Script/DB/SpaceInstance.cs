@@ -15,8 +15,18 @@ public class SpaceInstance : MonoBehaviour
     public float radius = 50;
 
     float lastdistance = 0f;
-    // Start is called before the first frame update
-
+    private void Awake () {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+    
     // Update is called once per frame
     void Update()
     {

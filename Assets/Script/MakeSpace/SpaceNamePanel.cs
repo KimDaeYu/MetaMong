@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Cysharp.Threading.Tasks;
+using static DBManager;
 
 public class SpaceNamePanel : MonoBehaviour
 {
@@ -41,12 +42,16 @@ public class SpaceNamePanel : MonoBehaviour
         
         //Texture2D image = Image.GetComponent<Image>().texture;
 
+        Debug.Log(_gps);
+        Debug.Log(_space);
+        Debug.Log(image);
+        
         db.AddSpace(new DBManager.ARSpaceData
         {
             name = Content.GetComponent<TMP_InputField>().text,
             image = image,
-            x = _gps.current_Lat,
-            y = _gps.current_Long,
+            x = _gps.current_Long,
+            y = _gps.current_Lat,
             tilt = _space.tilt,
             distance = _space.distance,
             compass = _space.compass,
