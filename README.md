@@ -1,4 +1,4 @@
-**2022-1 컴퓨터공학 종합설계**
+**2022슈퍼챌린지 SW해커톤**
 
 <p align="center">
   <img src="./git_files/images/metamong.jpg" alt="LOGO" width="800"/>
