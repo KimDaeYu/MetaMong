@@ -11,8 +11,7 @@
 # 1. 프로젝트 동영상
 
 
-
-https://user-images.githubusercontent.com/30468434/150667562-80336abb-1431-4dd5-adc5-e0b30dca04e6.mp4
+https://drive.google.com/file/d/1HnO12c8tVPAzNL8-LVY5PvyF2ZnxiAOc/view?usp=sharing
 
 
 
