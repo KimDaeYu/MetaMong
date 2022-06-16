@@ -72,7 +72,9 @@ AR 과 GPS를 이용한 SNS 어플리케이션을 제안합니다.
 
 # 4. 프로젝트 사용법
 
-추후 추가 예정.
+해당 프로젝트를 Clone하고 Unity로 Clone 폴더를 기존 프로젝트로 연다.
+MetaMong/Assets/Scenes/Main/에 있는 LoginScene / Main / MakeSpace / MapScene 들을 Build Settins에 해당 씬들을 추가해준다.
+LoginScene를 열고 시작을 해주면 테스트를 진행할 수 있다. 또한 빌드를 진행하면 APK파일로 만들 수 있다.
 
 
 # 5. 프로젝트 전망
