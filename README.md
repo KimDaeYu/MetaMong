@@ -9,11 +9,9 @@
 
 
 # 1. 프로젝트 동영상
-
-
-https://drive.google.com/file/d/1HnO12c8tVPAzNL8-LVY5PvyF2ZnxiAOc/view?usp=sharing
-
-
+<a href = "https://www.youtube.com/watch?v=VxvmkdqCdhk">
+  <img alt="YouTube" src ="https://img.shields.io/badge/YouTube-181717.svg?&style=for-the-badge&logo=YouTube&logoColor=red"/>
+</a> 
 
 # 2. 📖프로젝트 설명
 
